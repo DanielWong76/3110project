@@ -67,9 +67,9 @@ let determine_num (grid : grid) (coords : int * int) =
 let rec print_coord (grid : grid) (row : int) (column : int) =
   let coord = (row, column) in
   let curr =
-    if List.mem coord grid.mines then mine
-    else if List.mem coord grid.opened then
-      string_of_int (determine_num grid coord)
+    if List.mem coord grid.opened then
+      if List.mem coord grid.mines then mine
+      else string_of_int (determine_num grid coord)
     else unrevealed
   in
   match grid.dimensions with
