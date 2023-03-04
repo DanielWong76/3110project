@@ -70,4 +70,4 @@ let rec print_coord (grid : grid) (row : int) (column : int) =
       else curr ^ print_coord grid row (column + 1)
 
 let display_grid (grid : grid) = print_coord grid 1 1 |> print_endline
-let _ = new_grid 5 5 |> reveal_tile (3, 3) |> display_grid
+let _ = new_grid 5 5 |> display_grid
