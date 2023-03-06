@@ -12,8 +12,8 @@ exception Already_Revealed
 exception Game_Over
 (** Raised when [reveal_tile] opens a mine *)
 
-val new_grid : int -> int -> grid
-(** [new grid a b] returns a new random grid of dimensions axb *)
+val new_grid : int -> int -> int -> grid
+(** [new grid a b c] returns a new random grid of dimensions axb with c mines *)
 
 val reveal_tile : int * int -> grid -> grid
 (** [reveal_tile (a,b) c] opens the tile at location (a,b) in grid c and
@@ -23,7 +23,7 @@ val reveal_tile : int * int -> grid -> grid
 
     Raises: [Already_Revealed] if (a,b) is already open *)
 
-val display_grid : grid -> _
+val display_grid : grid -> unit
 (** [display_grid a] prints a to the command line interface *)
 
 val get_dimensions : grid -> int * int

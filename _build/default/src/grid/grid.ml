@@ -12,9 +12,18 @@ exception Game_Over
 let unrevealed = "?"
 let mine = "X"
 
-let new_grid (rows : int) (columns : int) =
+let rec generate_mines (mine_num : int) (mines : (int * int) list)
+    (max_row : int) (max_column : int) =
+  if mine_num = 0 then mines
+  else
+    let new_mine = (Random.int max_column + 1, Random.int max_row + 1) in
+    if List.mem new_mine mines then
+      generate_mines mine_num mines max_row max_column
+    else generate_mines (mine_num - 1) (new_mine :: mines) max_row max_column
+
+let new_grid (rows : int) (columns : int) (num_mines : int) =
   {
-    mines = [];
+    mines = generate_mines num_mines [] rows columns;
     (* TODO: Add some way of adding mines*)
     opened = [];
     dimensions = (rows, columns);
@@ -58,9 +67,9 @@ let determine_num (grid : grid) (coords : int * int) =
 let rec print_coord (grid : grid) (row : int) (column : int) =
   let coord = (row, column) in
   let curr =
-    if List.mem coord grid.mines then mine
-    else if List.mem coord grid.opened then
-      string_of_int (determine_num grid coord)
+    if List.mem coord grid.opened then
+      if List.mem coord grid.mines then mine
+      else string_of_int (determine_num grid coord)
     else unrevealed
   in
   match grid.dimensions with
@@ -70,4 +79,4 @@ let rec print_coord (grid : grid) (row : int) (column : int) =
       else curr ^ print_coord grid row (column + 1)
 
 let display_grid (grid : grid) = print_coord grid 1 1 |> print_endline
-let _ = new_grid 5 5 |> display_grid
+let _ = new_grid 5 5 5 |> reveal_tile (3, 3) |> display_grid
