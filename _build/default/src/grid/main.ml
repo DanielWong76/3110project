@@ -1,4 +1,4 @@
-#use "grid.ml"
+open Grid
 
 let initialize difficulty = match difficulty with
   | "Easy" -> new_grid 8 8 10
