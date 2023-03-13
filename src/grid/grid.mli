@@ -3,6 +3,9 @@
 type grid
 (** The type [grid] represents the minesweeper grid *)
 
+val empty : grid
+(** Representation of empty grid*)
+
 exception Out_of_Bounds
 (** Raised when coords given are out of bounds for the given grid *)
 
