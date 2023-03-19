@@ -1,0 +1,46 @@
+(lang dune 3.7)
+(name Minesweeper)
+(sections (lib .) (libexec .) (doc ../../doc/Minesweeper))
+(files
+ (lib
+  (META
+   dune-package
+   grid.ml
+   grid.mli
+   minesweeper.a
+   minesweeper.cma
+   minesweeper.cmi
+   minesweeper.cmt
+   minesweeper.cmx
+   minesweeper.cmxa
+   minesweeper.ml
+   minesweeper__Grid.cmi
+   minesweeper__Grid.cmt
+   minesweeper__Grid.cmti
+   minesweeper__Grid.cmx
+   opam))
+ (libexec (minesweeper.cmxs))
+ (doc (README.md)))
+(library
+ (name Minesweeper)
+ (kind normal)
+ (archives (byte minesweeper.cma) (native minesweeper.cmxa))
+ (plugins (byte minesweeper.cma) (native minesweeper.cmxs))
+ (native_archives minesweeper.a)
+ (main_module_name Minesweeper)
+ (modes byte native)
+ (modules
+  (wrapped
+   (group
+    (alias
+     (obj_name minesweeper)
+     (visibility public)
+     (kind alias)
+     (source (path Minesweeper) (impl (path minesweeper.ml-gen))))
+    (name Minesweeper)
+    (modules
+     (module
+      (obj_name minesweeper__Grid)
+      (visibility public)
+      (source (path Grid) (intf (path grid.mli)) (impl (path grid.ml))))))
+   (wrapped true))))

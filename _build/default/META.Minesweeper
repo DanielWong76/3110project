@@ -1,0 +1,6 @@
+description = ""
+requires = ""
+archive(byte) = "minesweeper.cma"
+archive(native) = "minesweeper.cmxa"
+plugin(byte) = "minesweeper.cma"
+plugin(native) = "minesweeper.cmxs"

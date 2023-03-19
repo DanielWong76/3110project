@@ -1,10 +1,9 @@
-# dune utop src
+# dune exec ./bin/main.exe
 # OCAMLPARAM: unset
 # Shared cache: disabled
-# Workspace root: "/Users/Daniel/Documents/Y2S2/CS
-# 3110/Final_Project/3110project"
-# Auto-detected concurrency: 4
-$ /Users/Daniel/.opam/cs3110-2023sp/bin/ocamlc.opt -config > /var/folders/gz/5ykwzdl912qfqw4pfzt5qg2w0000gq/T/dune_2334e3_output
+# Workspace root: /home/caitlien/3110/3110project
+# Auto-detected concurrency: 8
+$ /home/caitlien/.opam/cs3110-2023sp/bin/ocamlc.opt -config > /tmp/dune_31a267_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
@@ -14,79 +13,77 @@ $ /Users/Daniel/.opam/cs3110-2023sp/bin/ocamlc.opt -config > /var/folders/gz/5yk
 #  ; fdo_target_exe = None
 #  ; build_dir = In_build_dir "default"
 #  ; toplevel_path =
-#      Some External "/Users/Daniel/.opam/cs3110-2023sp/lib/toplevel"
-#  ; ocaml_bin = External "/Users/Daniel/.opam/cs3110-2023sp/bin"
-#  ; ocaml = Ok External "/Users/Daniel/.opam/cs3110-2023sp/bin/ocaml"
-#  ; ocamlc = External "/Users/Daniel/.opam/cs3110-2023sp/bin/ocamlc.opt"
+#      Some External "/home/caitlien/.opam/cs3110-2023sp/lib/toplevel"
+#  ; ocaml_bin = External "/home/caitlien/.opam/cs3110-2023sp/bin"
+#  ; ocaml = Ok External "/home/caitlien/.opam/cs3110-2023sp/bin/ocaml"
+#  ; ocamlc = External "/home/caitlien/.opam/cs3110-2023sp/bin/ocamlc.opt"
 #  ; ocamlopt =
-#      Ok External "/Users/Daniel/.opam/cs3110-2023sp/bin/ocamlopt.opt"
+#      Ok External "/home/caitlien/.opam/cs3110-2023sp/bin/ocamlopt.opt"
 #  ; ocamldep =
-#      Ok External "/Users/Daniel/.opam/cs3110-2023sp/bin/ocamldep.opt"
+#      Ok External "/home/caitlien/.opam/cs3110-2023sp/bin/ocamldep.opt"
 #  ; ocamlmklib =
-#      Ok External "/Users/Daniel/.opam/cs3110-2023sp/bin/ocamlmklib.opt"
+#      Ok External "/home/caitlien/.opam/cs3110-2023sp/bin/ocamlmklib.opt"
 #  ; env =
 #      map
-#        { "DUNE_OCAML_HARDCODED" : "/Users/Daniel/.opam/cs3110-2023sp/lib"
-#        ; "DUNE_OCAML_STDLIB" : "/Users/Daniel/.opam/cs3110-2023sp/lib/ocaml"
-#        ; "DUNE_SOURCEROOT" :
-#            "/Users/Daniel/Documents/Y2S2/CS 3110/Final_Project/3110project"
-#        ; "INSIDE_DUNE" :
-#            "/Users/Daniel/Documents/Y2S2/CS 3110/Final_Project/3110project/_build/default"
-#        ; "MANPATH" :
-#            "/Users/Daniel/Documents/Y2S2/CS 3110/Final_Project/3110project/_build/install/default/bin"
+#        { "DUNE_OCAML_HARDCODED" : "/home/caitlien/.opam/cs3110-2023sp/lib"
+#        ; "DUNE_OCAML_STDLIB" : "/home/caitlien/.opam/cs3110-2023sp/lib/ocaml"
+#        ; "DUNE_SOURCEROOT" : "/home/caitlien/3110/3110project"
+#        ; "INSIDE_DUNE" : "/home/caitlien/3110/3110project/_build/default"
 #        ; "OCAMLFIND_IGNORE_DUPS_IN" :
-#            "/Users/Daniel/Documents/Y2S2/CS 3110/Final_Project/3110project/_build/install/default/lib"
+#            "/home/caitlien/3110/3110project/_build/install/default/lib"
 #        ; "OCAMLPATH" :
-#            "/Users/Daniel/Documents/Y2S2/CS 3110/Final_Project/3110project/_build/install/default/lib"
+#            "/home/caitlien/3110/3110project/_build/install/default/lib"
 #        ; "OCAMLTOP_INCLUDE_PATH" :
-#            "/Users/Daniel/Documents/Y2S2/CS 3110/Final_Project/3110project/_build/install/default/lib/toplevel"
+#            "/home/caitlien/3110/3110project/_build/install/default/lib/toplevel"
 #        ; "OCAML_COLOR" : "always"
 #        ; "OPAMCOLOR" : "always"
 #        }
-#  ; findlib_paths = [ External "/Users/Daniel/.opam/cs3110-2023sp/lib" ]
+#  ; findlib_paths = [ External "/home/caitlien/.opam/cs3110-2023sp/lib" ]
 #  ; arch_sixtyfour = true
 #  ; natdynlink_supported = true
 #  ; supports_shared_libraries = true
 #  ; ocaml_config =
 #      { version = "4.14.0"
 #      ; standard_library_default =
-#          "/Users/Daniel/.opam/cs3110-2023sp/lib/ocaml"
-#      ; standard_library = "/Users/Daniel/.opam/cs3110-2023sp/lib/ocaml"
+#          "/home/caitlien/.opam/cs3110-2023sp/lib/ocaml"
+#      ; standard_library = "/home/caitlien/.opam/cs3110-2023sp/lib/ocaml"
 #      ; standard_runtime = "the_standard_runtime_variable_was_deleted"
 #      ; ccomp_type = "cc"
-#      ; c_compiler = "cc"
+#      ; c_compiler = "gcc"
 #      ; ocamlc_cflags =
-#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread" ]
+#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread"; "-fPIC" ]
 #      ; ocamlc_cppflags = [ "-D_FILE_OFFSET_BITS=64" ]
 #      ; ocamlopt_cflags =
-#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread" ]
+#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread"; "-fPIC" ]
 #      ; ocamlopt_cppflags = [ "-D_FILE_OFFSET_BITS=64" ]
 #      ; bytecomp_c_compiler =
-#          [ "cc"
+#          [ "gcc"
 #          ; "-O2"
 #          ; "-fno-strict-aliasing"
 #          ; "-fwrapv"
 #          ; "-pthread"
+#          ; "-fPIC"
 #          ; "-D_FILE_OFFSET_BITS=64"
 #          ]
-#      ; bytecomp_c_libraries = [ "-lm"; "-lpthread" ]
+#      ; bytecomp_c_libraries = [ "-lm"; "-ldl"; "-lpthread" ]
 #      ; native_c_compiler =
-#          [ "cc"
+#          [ "gcc"
 #          ; "-O2"
 #          ; "-fno-strict-aliasing"
 #          ; "-fwrapv"
 #          ; "-pthread"
+#          ; "-fPIC"
 #          ; "-D_FILE_OFFSET_BITS=64"
 #          ]
-#      ; native_c_libraries = [ "-lm" ]
+#      ; native_c_libraries = [ "-lm"; "-ldl" ]
 #      ; native_pack_linker = [ "ld"; "-r"; "-o" ]
 #      ; cc_profile = []
 #      ; architecture = "amd64"
 #      ; model = "default"
 #      ; int_size = 63
 #      ; word_size = 64
-#      ; system = "macosx"
-#      ; asm = [ "cc"; "-c"; "-Wno-trigraphs" ]
+#      ; system = "linux"
+#      ; asm = [ "as" ]
 #      ; asm_cfi_supported = true
 #      ; with_frame_pointers = false
 #      ; ext_exe = ""
@@ -97,8 +94,8 @@ $ /Users/Daniel/.opam/cs3110-2023sp/bin/ocamlc.opt -config > /var/folders/gz/5yk
 #      ; os_type = "Unix"
 #      ; default_executable_name = "a.out"
 #      ; systhread_supported = true
-#      ; host = "x86_64-apple-darwin20.6.0"
-#      ; target = "x86_64-apple-darwin20.6.0"
+#      ; host = "x86_64-pc-linux-gnu"
+#      ; target = "x86_64-pc-linux-gnu"
 #      ; profiling = false
 #      ; flambda = false
 #      ; spacetime = false
@@ -118,9 +115,3 @@ $ /Users/Daniel/.opam/cs3110-2023sp/bin/ocamlc.opt -config > /var/folders/gz/5yk
 #      ; windows_unicode = false
 #      }
 #  }
-$ (cd _build/default && /Users/Daniel/.opam/cs3110-2023sp/bin/ocamldep.opt -modules -intf src/grid/grid.mli) > _build/default/src/grid/.game.objs/game__Grid.intf.d
-$ (cd _build/default && /Users/Daniel/.opam/cs3110-2023sp/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I src/grid/.game.objs/byte -no-alias-deps -opaque -open Game -o src/grid/.game.objs/byte/game__Grid.cmi -c -intf src/grid/grid.mli)
-$ (cd _build/default && /Users/Daniel/.opam/cs3110-2023sp/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -24 -g -bin-annot -I src/.utop/.utop.eobjs/byte -I /Users/Daniel/.opam/cs3110-2023sp/lib/findlib -I /Users/Daniel/.opam/cs3110-2023sp/lib/lambda-term -I /Users/Daniel/.opam/cs3110-2023sp/lib/logs -I /Users/Daniel/.opam/cs3110-2023sp/lib/lwt -I /Users/Daniel/.opam/cs3110-2023sp/lib/lwt/unix -I /Users/Daniel/.opam/cs3110-2023sp/lib/lwt_react -I /Users/Daniel/.opam/cs3110-2023sp/lib/mew -I /Users/Daniel/.opam/cs3110-2023sp/lib/mew_vi -I /Users/Daniel/.opam/cs3110-2023sp/lib/ocaml/compiler-libs -I /Users/Daniel/.opam/cs3110-2023sp/lib/ocaml/threads -I /Users/Daniel/.opam/cs3110-2023sp/lib/ocplib-endian -I /Users/Daniel/.opam/cs3110-2023sp/lib/ocplib-endian/bigstring -I /Users/Daniel/.opam/cs3110-2023sp/lib/react -I /Users/Daniel/.opam/cs3110-2023sp/lib/result -I /Users/Daniel/.opam/cs3110-2023sp/lib/trie -I /Users/Daniel/.opam/cs3110-2023sp/lib/uchar -I /Users/Daniel/.opam/cs3110-2023sp/lib/utop -I /Users/Daniel/.opam/cs3110-2023sp/lib/uucp -I /Users/Daniel/.opam/cs3110-2023sp/lib/uuseg -I /Users/Daniel/.opam/cs3110-2023sp/lib/uutf -I /Users/Daniel/.opam/cs3110-2023sp/lib/zed -I src/grid/.game.objs/byte -no-alias-deps -o src/.utop/.utop.eobjs/byte/dune__exe__Utop.cmo -c -impl src/.utop/utop.ml-gen)
-$ (cd _build/default && /Users/Daniel/.opam/cs3110-2023sp/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I src/grid/.game.objs/byte -intf-suffix .ml -no-alias-deps -opaque -open Game -o src/grid/.game.objs/byte/game__Grid.cmo -c -impl src/grid/grid.ml)
-$ (cd _build/default && /Users/Daniel/.opam/cs3110-2023sp/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -a -o src/grid/game.cma src/grid/.game.objs/byte/game.cmo src/grid/.game.objs/byte/game__Grid.cmo)
-$ (cd _build/default && /Users/Daniel/.opam/cs3110-2023sp/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -24 -g -o src/.utop/utop.exe -output-complete-exe /Users/Daniel/.opam/cs3110-2023sp/lib/ocaml/compiler-libs/ocamlcommon.cma /Users/Daniel/.opam/cs3110-2023sp/lib/ocaml/compiler-libs/ocamlbytecomp.cma /Users/Daniel/.opam/cs3110-2023sp/lib/ocaml/compiler-libs/ocamltoplevel.cma /Users/Daniel/.opam/cs3110-2023sp/lib/findlib/findlib.cma /Users/Daniel/.opam/cs3110-2023sp/lib/findlib/findlib_top.cma /Users/Daniel/.opam/cs3110-2023sp/lib/logs/logs.cma -I /Users/Daniel/.opam/cs3110-2023sp/lib/ocaml /Users/Daniel/.opam/cs3110-2023sp/lib/lwt/lwt.cma /Users/Daniel/.opam/cs3110-2023sp/lib/logs/logs_lwt.cma /Users/Daniel/.opam/cs3110-2023sp/lib/ocaml/unix.cma -I /Users/Daniel/.opam/cs3110-2023sp/lib/ocaml /Users/Daniel/.opam/cs3110-2023sp/lib/ocaml/bigarray.cma -I /Users/Daniel/.opam/cs3110-2023sp/lib/ocaml /Users/Daniel/.opam/cs3110-2023sp/lib/ocplib-endian/ocplib_endian.cma /Users/Daniel/.opam/cs3110-2023sp/lib/ocplib-endian/bigstring/ocplib_endian_bigstring.cma /Users/Daniel/.opam/cs3110-2023sp/lib/ocaml/threads/threads.cma -I /Users/Daniel/.opam/cs3110-2023sp/lib/ocaml /Users/Daniel/.opam/cs3110-2023sp/lib/lwt/unix/lwt_unix.cma -I /Users/Daniel/.opam/cs3110-2023sp/lib/lwt/unix /Users/Daniel/.opam/cs3110-2023sp/lib/react/react.cma /Users/Daniel/.opam/cs3110-2023sp/lib/lwt_react/lwt_react.cma /Users/Daniel/.opam/cs3110-2023sp/lib/result/result.cma /Users/Daniel/.opam/cs3110-2023sp/lib/uutf/uutf.cma /Users/Daniel/.opam/cs3110-2023sp/lib/uucp/uucp.cma /Users/Daniel/.opam/cs3110-2023sp/lib/uuseg/uuseg.cma /Users/Daniel/.opam/cs3110-2023sp/lib/zed/zed.cma /Users/Daniel/.opam/cs3110-2023sp/lib/trie/trie.cma /Users/Daniel/.opam/cs3110-2023sp/lib/mew/mew.cma /Users/Daniel/.opam/cs3110-2023sp/lib/mew_vi/mew_vi.cma /Users/Daniel/.opam/cs3110-2023sp/lib/lambda-term/lambda_term.cma -I /Users/Daniel/.opam/cs3110-2023sp/lib/lambda-term /Users/Daniel/.opam/cs3110-2023sp/lib/utop/uTop.cma src/grid/game.cma src/.utop/.utop.eobjs/byte/dune__exe__Utop.cmo -linkall -warn-error -31)
