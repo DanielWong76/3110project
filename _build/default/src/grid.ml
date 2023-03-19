@@ -10,6 +10,7 @@ exception Out_of_Bounds
 exception Already_Revealed
 exception Game_Over
 
+<<<<<<< HEAD:_build/default/src/grid.ml
 let empty : grid =
   { mines = []; opened = []; flagged = []; dimensions = (0, 0) }
 
@@ -28,6 +29,12 @@ let get_dimensions_y (grid : grid) =
 
 let get_mines (grid : grid) = List.length grid.mines
 let get_flagged (grid : grid) = List.length grid.flagged
+=======
+let empty : grid = {mines=[]; opened=[]; dimensions=(0,0)}
+
+let unrevealed = "?"
+let mine = "X"
+>>>>>>> c43721f209fd92b989dc1e4731bfcb34585612d2:_build/default/src/grid/grid.ml
 
 let rec generate_mines (mine_num : int) (mines : (int * int) list)
     (max_row : int) (max_column : int) =
@@ -115,4 +122,10 @@ let rec print_coord (grid : grid) (row : int) (column : int) =
       else curr ^ print_coord grid row (column + 1)
 
 let display_grid (grid : grid) = print_coord grid 1 1 |> print_endline
+<<<<<<< HEAD:_build/default/src/grid.ml
 (* let _ = new_grid 5 5 5 |> reveal_tile (3, 3) |> display_grid *)
+=======
+let _ = new_grid 5 5 5 |> reveal_tile (3, 3) |> display_grid
+
+
+>>>>>>> c43721f209fd92b989dc1e4731bfcb34585612d2:_build/default/src/grid/grid.ml
