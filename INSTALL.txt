@@ -1,0 +1,3 @@
+In terminal run: make game
+
+Terminal will start game and prompt user on how to play.
