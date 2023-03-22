@@ -1,0 +1,28 @@
+--
+# Members of your group.
+group:
+  - name: Daniel Wong
+    netid: djw329
+  - name: Caitlien Le
+    netid: chl72
+  - name: Daniel Tang
+    netidid: dt488
+# Your PM.
+pm:
+  name: Tony Yang
+  netid: txy3
+# Set to false if you don't want your gallery entry to be public.
+publish: true
+# Pithy title
+title: "Mine Sweeper"
+# OK if this is a Cornell Github link, but public gallery viewers won't be able to see it.
+git-repo: "https://github.com/DanielWong76/3110project"
+# If you have no demo screencast, replace the url string with an empty string ""
+demo-video-url: ""
+# Write a short, attention-grabbing description of your project.
+desc: >
+  Our project is a replication of the popular game minesweeper. This a game in which you are
+  given a field of squares and each square may or may not contain a mine. We have functionality
+  that allows for a player to play a game of minesweeper by choosing which square they would
+  like to sweep or flag as dangerous. Our game has support for different difficulties based on
+  the experience of a player. Our Mine Sweeper is a fun interactive experience!
