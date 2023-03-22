@@ -1,3 +1,5 @@
-In terminal run: make game
+1. Clone the repo.
+2. In your terminal, cd to wherever you cloned the repo. The folder you are in should be called "3110project"
+3. Type and submit the command: make game
 
 Terminal will start game and prompt user on how to play.
