@@ -1,9 +1,0 @@
-2023-03-19T19:04:52+00:00 Caitlien#02 I: Start test test suite for minesweeper:1:get_dimensions test.
-2023-03-19T19:04:52+00:00 Caitlien#02 I: Test test suite for minesweeper:1:get_dimensions test is successful.
-2023-03-19T19:04:52+00:00 Caitlien#02 I: End test test suite for minesweeper:1:get_dimensions test.
-2023-03-19T19:04:52+00:00 Caitlien#02 I: Start test test suite for minesweeper:5:get_dimensions_x test.
-2023-03-19T19:04:52+00:00 Caitlien#02 I: Test test suite for minesweeper:5:get_dimensions_x test is successful.
-2023-03-19T19:04:52+00:00 Caitlien#02 I: End test test suite for minesweeper:5:get_dimensions_x test.
-2023-03-19T19:04:52+00:00 Caitlien#02 I: Start test test suite for minesweeper:8:get_dimensions_y test.
-2023-03-19T19:04:52+00:00 Caitlien#02 I: Test test suite for minesweeper:8:get_dimensions_y test is successful.
-2023-03-19T19:04:52+00:00 Caitlien#02 I: End test test suite for minesweeper:8:get_dimensions_y test.
