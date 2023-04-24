@@ -183,7 +183,7 @@ let rec print_coord (grid : grid) (row : int) (column : int) =
     if List.mem coord grid.flagged then flagged
     else if List.mem coord grid.opened then
       if List.mem coord grid.mines then mine
-      else string_of_int (determine_num grid coord) ^ " "
+      else string_of_int (determine_num grid coord)
     else unrevealed
   in
   let columns =

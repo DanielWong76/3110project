@@ -50,7 +50,16 @@ let rec choose_action () : string =
       print_string "Not an action\n";
       choose_action ()
 
-let main () =
+let rec on_death () =
+  print_string "Try again? (Y/N)\n";
+  match String.lowercase_ascii (read_line ()) with
+  | "y" -> main ()
+  | "n" -> raise End_of_file
+  | _ ->
+      print_string "Sorry, I didn't quite catch that...\n";
+      on_death ()
+
+and main () =
   print_string "\n\nWelcome to Minesweeper\n";
   let rec repl gr =
     print_string
@@ -82,7 +91,7 @@ let main () =
       if w != empty then repl w
       else (
         print_string "\nGame Over\n";
-        raise End_of_file)
+        on_death ())
   in
   repl (initialize (choose ()))
 
