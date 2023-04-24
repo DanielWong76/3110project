@@ -131,7 +131,7 @@ let rec reveal_tile (coords : int * int) (grid : grid) =
               { grid with opened = new_opened }
               (List.sort_uniq
                  (fun (i, j) (x, y) ->
-                   if i > x then 1 else if i = j && j = y then 0 else -1)
+                   if i > x then 1 else if i = x && j = y then 0 else -1)
                  surroundings)
       else { grid with opened = new_opened }
 
