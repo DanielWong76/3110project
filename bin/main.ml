@@ -91,6 +91,7 @@ and main () =
       if w != empty then repl w
       else (
         print_string "\nGame Over\n";
+        Grid.reveal_all_mines gr;
         on_death ())
   in
   repl (initialize (choose ()))

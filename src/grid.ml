@@ -210,8 +210,8 @@ let rec print_coord (grid : grid) (row : int) (column : int)
             curr ^ "\n "
             ^ process_number (row + 1) b
             ^ " | "
-            ^ print_coord grid (row + 1) 1 false
-        else curr ^ print_coord grid row (column + 1) false
+            ^ print_coord grid (row + 1) 1 reveal_all_mines
+        else curr ^ print_coord grid row (column + 1) reveal_all_mines
   in
   "" ^ string_rep_of_grid
 
