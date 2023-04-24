@@ -31,6 +31,7 @@ let get_flagged (grid : grid) = List.length grid.flagged
 
 let rec generate_mines (mine_num : int) (mines : (int * int) list)
     (max_row : int) (max_column : int) =
+  let _ = Random.self_init in
   if mine_num = 0 then mines
   else
     let new_mine = (Random.int max_column + 1, Random.int max_row + 1) in
@@ -157,7 +158,11 @@ let add_coord_numbers_to_grid (grid : grid) : string =
   in
   let rec add_dashes curr num_columns =
     if curr > num_columns then "\n"
-    else "__" ^ add_dashes (curr + 1) num_columns
+    else
+      let max_digits =
+        float_of_int num_columns |> Float.log10 |> int_of_float |> ( + ) 2
+      in
+      copy_string max_digits "-" "" ^ add_dashes (curr + 1) num_columns
   in
   let dimensions = grid.dimensions in
   match dimensions with
@@ -177,10 +182,12 @@ let process_number num columns =
   let spaces_needed = fcolumns_digits - fnum_digits in
   copy_string spaces_needed " " "" ^ string_of_int num
 
-let rec print_coord (grid : grid) (row : int) (column : int) =
+let rec print_coord (grid : grid) (row : int) (column : int)
+    (reveal_all_mines : bool) =
   let coord = (row, column) in
   let curr =
     if List.mem coord grid.flagged then flagged
+    else if reveal_all_mines && List.mem coord grid.mines then mine
     else if List.mem coord grid.opened then
       if List.mem coord grid.mines then mine
       else string_of_int (determine_num grid coord)
@@ -203,8 +210,8 @@ let rec print_coord (grid : grid) (row : int) (column : int) =
             curr ^ "\n "
             ^ process_number (row + 1) b
             ^ " | "
-            ^ print_coord grid (row + 1) 1
-        else curr ^ print_coord grid row (column + 1)
+            ^ print_coord grid (row + 1) 1 false
+        else curr ^ print_coord grid row (column + 1) false
   in
   "" ^ string_rep_of_grid
 
@@ -212,6 +219,13 @@ let display_grid (grid : grid) =
   match grid.dimensions with
   | _, b ->
       add_coord_numbers_to_grid grid
-      ^ " " ^ process_number 1 b ^ " | " ^ print_coord grid 1 1
+      ^ " " ^ process_number 1 b ^ " | " ^ print_coord grid 1 1 false
       |> print_endline
 (* let _ = new_grid 5 5 5 |> reveal_tile (3, 3) |> display_grid *)
+
+let reveal_all_mines (grid : grid) =
+  match grid.dimensions with
+  | _, b ->
+      add_coord_numbers_to_grid grid
+      ^ " " ^ process_number 1 b ^ " | " ^ print_coord grid 1 1 true
+      |> print_endline
