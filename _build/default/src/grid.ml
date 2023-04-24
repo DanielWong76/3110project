@@ -70,6 +70,35 @@ let determine_num (grid : grid) (coords : int * int) =
         ]
       in
       check_mines grid surroundings
+  
+let rec fold_grid f (grid : grid) (coord_list : (int * int) list) = match coord_list with
+  | [] -> grid
+  | (a,b) :: t -> if List.mem (a,b) grid.opened then fold_grid f grid t else fold_grid f (f (a,b) grid) t
+
+let rec reveal_tile (coords : int * int) (grid : grid) =
+  if List.mem coords grid.opened then
+    raise Already_Revealed (* Checks if already opened tile *)
+  else
+    let new_opened = coords :: grid.opened in 
+    if List.mem coords grid.mines then
+      raise Game_Over (* Checks if opened tile is a mine*)
+    else if determine_num grid coords = 0 then match coords with
+      | a, b -> let x = get_dimensions_x grid in
+          let y = get_dimensions_y grid in
+          let surroundings =
+            (* Gets surrounding tiles *)
+            [
+              (Int.max (a - 1) 1, Int.max (b - 1) 1);
+              (a, Int.max (b - 1) 1);
+              (Int.min (a + 1) (x), Int.max (b - 1) 1);
+              (Int.max (a - 1) 1, b);
+              (Int.min (a + 1) x, b);
+              (Int.max (a - 1) 1, Int.min (b + 1) y);
+              (a, Int.min (b + 1) y);
+              (Int.min (a + 1) y, Int.min (b + 1) y);
+            ]
+          in fold_grid reveal_tile ({ grid with opened = new_opened }) (List.sort_uniq (fun (i,j) (x,y) -> if i>x then 1 else if i=j && j=y then 0 else -1) surroundings)
+    else { grid with opened = new_opened }
 
 let flag_tile (coords : int * int) (grid : grid) =
   if List.mem coords grid.opened then
