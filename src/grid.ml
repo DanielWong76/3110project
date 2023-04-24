@@ -31,6 +31,7 @@ let get_flagged (grid : grid) = List.length grid.flagged
 
 let rec generate_mines (mine_num : int) (mines : (int * int) list)
     (max_row : int) (max_column : int) =
+  let _ = Random.self_init in
   if mine_num = 0 then mines
   else
     let new_mine = (Random.int max_column + 1, Random.int max_row + 1) in
@@ -183,7 +184,7 @@ let rec print_coord (grid : grid) (row : int) (column : int) =
     if List.mem coord grid.flagged then flagged
     else if List.mem coord grid.opened then
       if List.mem coord grid.mines then mine
-      else string_of_int (determine_num grid coord) ^ " "
+      else string_of_int (determine_num grid coord)
     else unrevealed
   in
   let columns =
