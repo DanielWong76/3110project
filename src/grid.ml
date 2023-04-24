@@ -13,9 +13,9 @@ exception Game_Over
 let empty : grid =
   { mines = []; opened = []; flagged = []; dimensions = (0, 0) }
 
-let unrevealed = "? "
-let mine = "X "
-let flagged = "F "
+let unrevealed = "?"
+let mine = "X"
+let flagged = "F"
 let get_dimensions (grid : grid) = grid.dimensions
 
 let get_dimensions_x (grid : grid) =
@@ -31,6 +31,7 @@ let get_flagged (grid : grid) = List.length grid.flagged
 
 let rec generate_mines (mine_num : int) (mines : (int * int) list)
     (max_row : int) (max_column : int) =
+  let _ = Random.self_init in
   if mine_num = 0 then mines
   else
     let new_mine = (Random.int max_column + 1, Random.int max_row + 1) in
@@ -70,35 +71,13 @@ let determine_num (grid : grid) (coords : int * int) =
         ]
       in
       check_mines grid surroundings
-  
-let rec fold_grid f (grid : grid) (coord_list : (int * int) list) = match coord_list with
-  | [] -> grid
-  | (a,b) :: t -> if List.mem (a,b) grid.opened then fold_grid f grid t else fold_grid f (f (a,b) grid) t
 
-let rec reveal_tile (coords : int * int) (grid : grid) =
-  if List.mem coords grid.opened then
-    raise Already_Revealed (* Checks if already opened tile *)
-  else
-    let new_opened = coords :: grid.opened in 
-    if List.mem coords grid.mines then
-      raise Game_Over (* Checks if opened tile is a mine*)
-    else if determine_num grid coords = 0 then match coords with
-      | a, b -> let x = get_dimensions_x grid in
-          let y = get_dimensions_y grid in
-          let surroundings =
-            (* Gets surrounding tiles *)
-            [
-              (Int.max (a - 1) 1, Int.max (b - 1) 1);
-              (a, Int.max (b - 1) 1);
-              (Int.min (a + 1) (x), Int.max (b - 1) 1);
-              (Int.max (a - 1) 1, b);
-              (Int.min (a + 1) x, b);
-              (Int.max (a - 1) 1, Int.min (b + 1) y);
-              (a, Int.min (b + 1) y);
-              (Int.min (a + 1) y, Int.min (b + 1) y);
-            ]
-          in fold_grid reveal_tile ({ grid with opened = new_opened }) (List.sort_uniq (fun (i,j) (x,y) -> if i>x then 1 else if i=j && j=y then 0 else -1) surroundings)
-    else { grid with opened = new_opened }
+let rec fold_grid f (grid : grid) (coord_list : (int * int) list) =
+  match coord_list with
+  | [] -> grid
+  | (a, b) :: t ->
+      if List.mem (a, b) grid.opened then fold_grid f grid t
+      else fold_grid f (f (a, b) grid) t
 
 let flag_tile (coords : int * int) (grid : grid) =
   if List.mem coords grid.opened then
@@ -119,20 +98,134 @@ let flag_tile (coords : int * int) (grid : grid) =
       }
     else { grid with flagged = coords :: grid.flagged }
 
-let rec print_coord (grid : grid) (row : int) (column : int) =
+let rec reveal_tile (coords : int * int) (grid : grid) =
+  if List.mem coords grid.opened then
+    raise Already_Revealed (* Checks if already opened tile *)
+  else
+    let new_opened = coords :: grid.opened in
+    if List.mem coords grid.mines then
+      raise Game_Over (* Checks if opened tile is a mine*)
+    else
+      let grid =
+        if List.mem coords grid.flagged then flag_tile coords grid else grid
+      in
+      if determine_num grid coords = 0 then
+        match coords with
+        | a, b ->
+            let x = get_dimensions_x grid in
+            let y = get_dimensions_y grid in
+            let surroundings =
+              (* Gets surrounding tiles *)
+              [
+                (Int.max (a - 1) 1, Int.max (b - 1) 1);
+                (a, Int.max (b - 1) 1);
+                (Int.min (a + 1) x, Int.max (b - 1) 1);
+                (Int.max (a - 1) 1, b);
+                (Int.min (a + 1) x, b);
+                (Int.max (a - 1) 1, Int.min (b + 1) y);
+                (a, Int.min (b + 1) y);
+                (Int.min (a + 1) y, Int.min (b + 1) y);
+              ]
+            in
+            fold_grid reveal_tile
+              { grid with opened = new_opened }
+              (List.sort_uniq
+                 (fun (i, j) (x, y) ->
+                   if i > x then 1 else if i = j && j = y then 0 else -1)
+                 surroundings)
+      else { grid with opened = new_opened }
+
+let rec copy_string num string acc =
+  if num <= 0 then acc else copy_string (num - 1) string (acc ^ string)
+
+(* Adds the column coordinates to the string rep of the grid. Call this After
+   the end of the print_coord function *)
+let add_coord_numbers_to_grid (grid : grid) : string =
+  let rec add_numbers curr num_columns =
+    (* Adds the numbers and a newline *)
+    if curr = num_columns then string_of_int curr ^ "\n"
+    else
+      let max_digits =
+        float_of_int num_columns |> Float.log10 |> int_of_float |> ( + ) 1
+      in
+      let current_digits =
+        float_of_int (curr + 1) |> Float.log10 |> int_of_float |> ( + ) 1
+      in
+      let num_spaces = max_digits - current_digits + 1 in
+      string_of_int curr
+      ^ copy_string num_spaces " " ""
+      ^ add_numbers (curr + 1) num_columns
+  in
+  let rec add_dashes curr num_columns =
+    if curr > num_columns then "\n"
+    else
+      let max_digits =
+        float_of_int num_columns |> Float.log10 |> int_of_float |> ( + ) 2
+      in
+      copy_string max_digits "-" "" ^ add_dashes (curr + 1) num_columns
+  in
+  let dimensions = grid.dimensions in
+  match dimensions with
+  | a, b ->
+      let row_digits = int_of_float (Float.log10 (float_of_int a)) + 1 in
+      copy_string (row_digits + 4) " " ""
+      ^ add_numbers 1 b
+      ^ copy_string (row_digits + 3) " " ""
+      ^ add_dashes 1 b
+
+(* Processes the spacing of numbers in the display mode for rows *)
+let process_number num columns =
+  let fnum = float_of_int num in
+  let fcolumns = float_of_int columns in
+  let fnum_digits = int_of_float (Float.log10 fnum) + 1 in
+  let fcolumns_digits = int_of_float (Float.log10 fcolumns) + 1 in
+  let spaces_needed = fcolumns_digits - fnum_digits in
+  copy_string spaces_needed " " "" ^ string_of_int num
+
+let rec print_coord (grid : grid) (row : int) (column : int)
+    (reveal_all_mines : bool) =
   let coord = (row, column) in
   let curr =
     if List.mem coord grid.flagged then flagged
+    else if reveal_all_mines && List.mem coord grid.mines then mine
     else if List.mem coord grid.opened then
       if List.mem coord grid.mines then mine
-      else string_of_int (determine_num grid coord) ^ " "
+      else string_of_int (determine_num grid coord)
     else unrevealed
   in
-  match grid.dimensions with
-  | a, b ->
-      if a = column then
-        if b = row then curr else curr ^ "\n" ^ print_coord grid (row + 1) 1
-      else curr ^ print_coord grid row (column + 1)
+  let columns =
+    match grid.dimensions with
+    | _, b -> b
+  in
+  let spaces =
+    float_of_int (1 + columns) |> Float.log10 |> int_of_float |> ( + ) 1
+  in
+  let curr = curr ^ copy_string spaces " " "" in
+  let string_rep_of_grid =
+    match grid.dimensions with
+    | a, b ->
+        if a = column then
+          if b = row then curr
+          else
+            curr ^ "\n "
+            ^ process_number (row + 1) b
+            ^ " | "
+            ^ print_coord grid (row + 1) 1 reveal_all_mines
+        else curr ^ print_coord grid row (column + 1) reveal_all_mines
+  in
+  "" ^ string_rep_of_grid
 
-let display_grid (grid : grid) = print_coord grid 1 1 |> print_endline
+let display_grid (grid : grid) =
+  match grid.dimensions with
+  | _, b ->
+      add_coord_numbers_to_grid grid
+      ^ " " ^ process_number 1 b ^ " | " ^ print_coord grid 1 1 false
+      |> print_endline
 (* let _ = new_grid 5 5 5 |> reveal_tile (3, 3) |> display_grid *)
+
+let reveal_all_mines (grid : grid) =
+  match grid.dimensions with
+  | _, b ->
+      add_coord_numbers_to_grid grid
+      ^ " " ^ process_number 1 b ^ " | " ^ print_coord grid 1 1 true
+      |> print_endline

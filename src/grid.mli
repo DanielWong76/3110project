@@ -34,7 +34,7 @@ val flag_tile : int * int -> grid -> grid
 
     Raises: [Already_Revealed] if (a,b) is already open*)
 
-val print_coord : grid -> int -> int -> string
+val print_coord : grid -> int -> int -> bool -> string
 
 val display_grid : grid -> unit
 (** [display_grid a] prints a to the command line interface *)
@@ -53,3 +53,6 @@ val get_mines : grid -> int
 
 val get_flagged : grid -> int
 (** [get_flagged a] returns the number of flagged tiles of a *)
+
+val reveal_all_mines : grid -> unit
+(** [reveal_all_mines g] prints g with all player progress and mines revealed *)

@@ -1,1 +1,1 @@
-src/grid.ml: Int List Random
+src/grid.ml: Float Int List Random
