@@ -47,15 +47,6 @@ let new_grid (rows : int) (columns : int) (num_mines : int) =
     dimensions = (rows, columns);
   }
 
-let reveal_tile (coords : int * int) (grid : grid) =
-  if List.mem coords grid.opened then
-    raise Already_Revealed (* Checks if already opened tile *)
-  else
-    let new_opened = coords :: grid.opened in
-    if List.mem coords grid.mines then
-      raise Game_Over (* Checks if opened tile is a mine*)
-    else { grid with opened = new_opened }
-
 (** [check_mine g lst] checks how many mines in [lst] are in [g] *)
 let check_mines (grid : grid) (coords : (int * int) list) =
   List.fold_left
@@ -98,6 +89,18 @@ let flag_tile (coords : int * int) (grid : grid) =
         flagged = List.filter (fun (a, b) -> a != x && b != y) grid.flagged;
       }
     else { grid with flagged = coords :: grid.flagged }
+
+let reveal_tile (coords : int * int) (grid : grid) =
+  if List.mem coords grid.opened then
+    raise Already_Revealed (* Checks if already opened tile *)
+  else
+    let grid =
+      if List.mem coords grid.flagged then flag_tile coords grid else grid
+    in
+    let new_opened = coords :: grid.opened in
+    if List.mem coords grid.mines then
+      raise Game_Over (* Checks if opened tile is a mine*)
+    else { grid with opened = new_opened }
 
 let rec print_coord (grid : grid) (row : int) (column : int) =
   let coord = (row, column) in
