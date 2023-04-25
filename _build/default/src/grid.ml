@@ -4,6 +4,8 @@ type grid = {
       (* (a,b) indicates where the player has revealed a tile *)
   flagged : (int * int) list;
   dimensions : int * int; (* (a,b) represents the grid is of size a*b *)
+  tiles_opened : int; (* The number of tiles opened in this grid *)
+  time_taken : float;
 }
 
 exception Out_of_Bounds
@@ -11,7 +13,14 @@ exception Already_Revealed
 exception Game_Over
 
 let empty : grid =
-  { mines = []; opened = []; flagged = []; dimensions = (0, 0) }
+  {
+    mines = [];
+    opened = [];
+    flagged = [];
+    dimensions = (0, 0);
+    tiles_opened = 0;
+    time_taken = 0.;
+  }
 
 let unrevealed = "?"
 let mine = "X"
@@ -46,6 +55,8 @@ let new_grid (rows : int) (columns : int) (num_mines : int) =
     opened = [];
     flagged = [];
     dimensions = (rows, columns);
+    tiles_opened = 0;
+    time_taken = 0.;
   }
 
 (** [check_mine g lst] checks how many mines in [lst] are in [g] *)
@@ -128,12 +139,17 @@ let rec reveal_tile (coords : int * int) (grid : grid) =
               ]
             in
             fold_grid reveal_tile
-              { grid with opened = new_opened }
+              {
+                grid with
+                opened = new_opened;
+                tiles_opened = grid.tiles_opened + 1;
+              }
               (List.sort_uniq
                  (fun (i, j) (x, y) ->
                    if i > x then 1 else if i = x && j = y then 0 else -1)
                  surroundings)
-      else { grid with opened = new_opened }
+      else
+        { grid with opened = new_opened; tiles_opened = grid.tiles_opened + 1 }
 
 let rec copy_string num string acc =
   if num <= 0 then acc else copy_string (num - 1) string (acc ^ string)
@@ -229,3 +245,7 @@ let reveal_all_mines (grid : grid) =
       add_coord_numbers_to_grid grid
       ^ " " ^ process_number 1 b ^ " | " ^ print_coord grid 1 1 true
       |> print_endline
+
+let get_opened_tiles grid = grid.tiles_opened
+let add_time grid time = { grid with time_taken = grid.time_taken +. time }
+let get_time_taken grid = grid.time_taken

@@ -1,6 +1,11 @@
 open Minesweeper
 open Grid
 
+let leaderboard = ref (Leaderboard.empty ())
+
+(* TODO - Add a way to view leaderboard - Make a way to view new leaderboard
+   after adding an entry, maybe make it localized? *)
+
 let initialize difficulty =
   match String.lowercase_ascii difficulty with
   | "easy" -> new_grid 8 8 10
@@ -29,7 +34,7 @@ let open_tile (i, j) gr =
       gr
   | Game_Over ->
       print_string "\nBOOM! YOU LOSE\n";
-      empty
+      Grid.empty
 
 let flagged_tile (i, j) gr =
   try flag_tile (i, j) gr with
@@ -49,6 +54,36 @@ let rec choose_action () : string =
   | _ ->
       print_string "Not an action\n";
       choose_action ()
+
+let rec get_string () =
+  let name = String.lowercase_ascii (read_line ()) in
+  match name with
+  | _ -> (
+      print_string "Are you sure?\n";
+      match String.lowercase_ascii (read_line ()) with
+      | "y" -> name
+      | _ -> get_string ())
+
+let calculate_score grid =
+  (* TODO *)
+  let _ = grid in
+  failwith "Not implemented"
+
+let rec on_game_end grid =
+  print_string ("Score: " ^ string_of_int (Grid.get_opened_tiles grid) ^ "\n");
+  print_string "Would you like to save your score? (Y/N)\n";
+  match String.lowercase_ascii (read_line ()) with
+  | "n" -> ()
+  | "y" ->
+      print_string "What is your name?\n";
+      let name = get_string () in
+      let new_score =
+        Leaderboard.create_score name (calculate_score grid)
+          (Grid.get_time_taken grid)
+          (Grid.get_opened_tiles grid)
+      in
+      leaderboard := Leaderboard.add_score new_score !leaderboard
+  | _ -> on_game_end grid
 
 let rec on_death () =
   print_string "Try again? (Y/N)\n";
@@ -88,9 +123,10 @@ and main () =
         if action == "\nFlagging: \n" then flagged_tile (i, j) gr
         else open_tile (i, j) gr
       in
-      if w != empty then repl w
+      if w != Grid.empty then repl w
       else (
         print_string "\nGame Over\n";
+        on_game_end w;
         Grid.reveal_all_mines gr;
         on_death ())
   in

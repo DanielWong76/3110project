@@ -2,3 +2,6 @@
 
 (** @canonical Minesweeper.Grid *)
 module Grid = Minesweeper__Grid
+
+(** @canonical Minesweeper.Leaderboard *)
+module Leaderboard = Minesweeper__Leaderboard

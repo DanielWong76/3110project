@@ -56,3 +56,11 @@ val get_flagged : grid -> int
 
 val reveal_all_mines : grid -> unit
 (** [reveal_all_mines g] prints g with all player progress and mines revealed *)
+
+val get_opened_tiles : grid -> int
+(** [get_opened_tiles g] returns the number of opened tiles in [g] *)
+
+val add_time : grid -> float -> grid
+(** [add_time g t] returns a grid with the time of [t] to [g.time_taken] *)
+
+val get_time_taken : grid -> float

@@ -3,6 +3,8 @@ lib: [
   "_build/install/default/lib/Minesweeper/dune-package"
   "_build/install/default/lib/Minesweeper/grid.ml"
   "_build/install/default/lib/Minesweeper/grid.mli"
+  "_build/install/default/lib/Minesweeper/leaderboard.ml"
+  "_build/install/default/lib/Minesweeper/leaderboard.mli"
   "_build/install/default/lib/Minesweeper/minesweeper.a"
   "_build/install/default/lib/Minesweeper/minesweeper.cma"
   "_build/install/default/lib/Minesweeper/minesweeper.cmi"
@@ -14,6 +16,10 @@ lib: [
   "_build/install/default/lib/Minesweeper/minesweeper__Grid.cmt"
   "_build/install/default/lib/Minesweeper/minesweeper__Grid.cmti"
   "_build/install/default/lib/Minesweeper/minesweeper__Grid.cmx"
+  "_build/install/default/lib/Minesweeper/minesweeper__Leaderboard.cmi"
+  "_build/install/default/lib/Minesweeper/minesweeper__Leaderboard.cmt"
+  "_build/install/default/lib/Minesweeper/minesweeper__Leaderboard.cmti"
+  "_build/install/default/lib/Minesweeper/minesweeper__Leaderboard.cmx"
   "_build/install/default/lib/Minesweeper/opam"
 ]
 libexec: [

@@ -7,6 +7,8 @@
    dune-package
    grid.ml
    grid.mli
+   leaderboard.ml
+   leaderboard.mli
    minesweeper.a
    minesweeper.cma
    minesweeper.cmi
@@ -18,6 +20,10 @@
    minesweeper__Grid.cmt
    minesweeper__Grid.cmti
    minesweeper__Grid.cmx
+   minesweeper__Leaderboard.cmi
+   minesweeper__Leaderboard.cmt
+   minesweeper__Leaderboard.cmti
+   minesweeper__Leaderboard.cmx
    opam))
  (libexec (minesweeper.cmxs))
  (doc (README.md)))
@@ -42,5 +48,12 @@
      (module
       (obj_name minesweeper__Grid)
       (visibility public)
-      (source (path Grid) (intf (path grid.mli)) (impl (path grid.ml))))))
+      (source (path Grid) (intf (path grid.mli)) (impl (path grid.ml))))
+     (module
+      (obj_name minesweeper__Leaderboard)
+      (visibility public)
+      (source
+       (path Leaderboard)
+       (intf (path leaderboard.mli))
+       (impl (path leaderboard.ml))))))
    (wrapped true))))
