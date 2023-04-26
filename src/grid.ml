@@ -112,6 +112,13 @@ let flag_tile (coords : int * int) (grid : grid) =
 let rec reveal_tile (coords : int * int) (grid : grid) =
   if List.mem coords grid.opened then
     raise Already_Revealed (* Checks if already opened tile *)
+  else if List.mem coords grid.flagged then
+    match coords with
+    | x, y ->
+        let new_flagged =
+          List.filter (fun (a, b) -> a != x && b != y) grid.flagged
+        in
+        { grid with flagged = new_flagged }
   else
     let new_opened = coords :: grid.opened in
     if List.mem coords grid.mines then
