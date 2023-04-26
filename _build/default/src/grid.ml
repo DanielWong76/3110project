@@ -23,8 +23,8 @@ let empty : grid =
   }
 
 let unrevealed = "?"
-let mine = "X"
-let flagged = "F"
+let mine = "\027[31mX\027[37m"
+let flagged = "\027[31mF\027[37m"
 let get_dimensions (grid : grid) = grid.dimensions
 
 let get_dimensions_x (grid : grid) =
@@ -198,6 +198,19 @@ let process_number num columns =
   let spaces_needed = fcolumns_digits - fnum_digits in
   copy_string spaces_needed " " "" ^ string_of_int num
 
+let color_number num =
+  match num with
+  | 0 -> "\027[30m"
+  | 1 -> "\027[36m"
+  | 2 -> "\027[32m"
+  | 3 -> "\027[31m"
+  | 4 -> "\027[35m"
+  | 5 -> "\027[33m"
+  | 6 -> "\027[34m"
+  | 7 -> "\027[34m"
+  | 8 -> "\027[34m"
+  | _ -> "\027[37m"
+
 let rec print_coord (grid : grid) (row : int) (column : int)
     (reveal_all_mines : bool) =
   let coord = (row, column) in
@@ -206,7 +219,10 @@ let rec print_coord (grid : grid) (row : int) (column : int)
     else if reveal_all_mines && List.mem coord grid.mines then mine
     else if List.mem coord grid.opened then
       if List.mem coord grid.mines then mine
-      else string_of_int (determine_num grid coord)
+      else
+        color_number (determine_num grid coord)
+        ^ string_of_int (determine_num grid coord)
+        ^ "\027[37m"
     else unrevealed
   in
   let columns =
