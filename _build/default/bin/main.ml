@@ -75,6 +75,7 @@ let rec on_game_end grid =
   match String.lowercase_ascii (read_line ()) with
   | "n" -> ()
   | "y" ->
+      print_string "What is your name?\n";
       let name = get_string () in
       let new_score =
         Leaderboard.create_score name (calculate_score grid)
