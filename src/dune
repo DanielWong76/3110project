@@ -1,3 +1,4 @@
 (library
  (name minesweeper)
- (public_name Minesweeper))
+ (public_name Minesweeper)
+ (libraries unix))

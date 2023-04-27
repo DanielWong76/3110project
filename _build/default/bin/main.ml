@@ -56,34 +56,44 @@ let rec choose_action () : string =
       choose_action ()
 
 let rec get_string () =
-  let name = String.lowercase_ascii (read_line ()) in
+  let name = read_line () in
   match name with
   | _ -> (
-      print_string "Are you sure?\n";
+      print_string "Are you sure? (Y/N)\n";
       match String.lowercase_ascii (read_line ()) with
       | "y" -> name
       | _ -> get_string ())
 
-let calculate_score grid =
-  (* TODO *)
-  let _ = grid in
-  failwith "Not implemented"
+let calculate_score grid win =
+  (* Returns the score of [grid] *)
+  if win then
+    let tiles_score = Grid.get_opened_tiles grid in
+    let time_score = int_of_float (300. -. Grid.get_time_taken grid) in
+    let dimensions = Grid.get_dimensions grid in
+    match dimensions with
+    | x, y ->
+        let difficulty_score = x * y in
+        tiles_score + time_score + difficulty_score
+  else Grid.get_opened_tiles grid
 
-let rec on_game_end grid =
-  print_string ("Score: " ^ string_of_int (Grid.get_opened_tiles grid) ^ "\n");
+let rec on_game_end grid victory =
+  print_string ("Score: " ^ string_of_int (calculate_score grid victory) ^ "\n");
   print_string "Would you like to save your score? (Y/N)\n";
   match String.lowercase_ascii (read_line ()) with
   | "n" -> ()
   | "y" ->
       print_string "What is your name?\n";
       let name = get_string () in
+      let _ = print_string "Score saved!" in
       let new_score =
-        Leaderboard.create_score name (calculate_score grid)
+        Leaderboard.create_score name
+          (calculate_score grid victory)
           (Grid.get_time_taken grid)
           (Grid.get_opened_tiles grid)
       in
-      leaderboard := Leaderboard.add_score new_score !leaderboard
-  | _ -> on_game_end grid
+      let _ = leaderboard := Leaderboard.add_score new_score !leaderboard in
+      print_string (Leaderboard.return_top_n 10 !leaderboard)
+  | _ -> on_game_end grid victory
 
 let rec on_death () =
   print_string "Try again? (Y/N)\n";
@@ -126,7 +136,7 @@ and main () =
       if w != Grid.empty then repl w
       else (
         print_string "\nGame Over\n";
-        on_game_end w;
+        on_game_end gr false;
         Grid.reveal_all_mines gr;
         on_death ())
   in

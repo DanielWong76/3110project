@@ -22,3 +22,5 @@ val return_top_n : int -> leaderboard -> string
 val get_score_of : string -> leaderboard -> string
 (** [get_score_of n l] returns the string rep of the highest score of [n] in
     [l]. Raises: Not_found if [n] does not exist in [l] *)
+
+val size : leaderboard -> int

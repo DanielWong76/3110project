@@ -70,8 +70,23 @@ let get_score_of_test_error (description : string) (name : string)
   description >:: fun _ ->
   assert_raises Not_found (fun () -> Leaderboard.get_score_of name leaderboard)
 
+let string_to_string string = string
+
 let leaderboard_tests =
-  [ get_score_of_test_error "empty leaderboard" "name" (Leaderboard.empty ()) ]
+  [
+    get_score_of_test_error "empty leaderboard" "name" (Leaderboard.empty ());
+    ( "leaderboard with two entries displays both entries with return_top_n"
+    >:: fun _ ->
+      let score1 = Leaderboard.create_score "bob" 30 10. 20 in
+      let score2 = Leaderboard.create_score "alicia" 20 15. 1 in
+      let leaderboard =
+        Leaderboard.empty ()
+        |> Leaderboard.add_score score1
+        |> Leaderboard.add_score score2
+        |> Leaderboard.return_top_n 10
+      in
+      assert_equal "B" leaderboard ~printer:string_to_string );
+  ]
 
 let suite =
   "test suite for minesweeper"

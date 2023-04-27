@@ -33,6 +33,7 @@
  (archives (byte minesweeper.cma) (native minesweeper.cmxa))
  (plugins (byte minesweeper.cma) (native minesweeper.cmxs))
  (native_archives minesweeper.a)
+ (requires unix)
  (main_module_name Minesweeper)
  (modes byte native)
  (modules

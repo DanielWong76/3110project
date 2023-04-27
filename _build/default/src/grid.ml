@@ -5,7 +5,8 @@ type grid = {
   flagged : (int * int) list;
   dimensions : int * int; (* (a,b) represents the grid is of size a*b *)
   tiles_opened : int; (* The number of tiles opened in this grid *)
-  time_taken : float;
+  time_taken : float; (* Time elapsed since this grid's creation *)
+  time_created : float;
 }
 
 exception Out_of_Bounds
@@ -20,6 +21,7 @@ let empty : grid =
     dimensions = (0, 0);
     tiles_opened = 0;
     time_taken = 0.;
+    time_created = Unix.time ();
   }
 
 let unrevealed = "?"
@@ -57,6 +59,7 @@ let new_grid (rows : int) (columns : int) (num_mines : int) =
     dimensions = (rows, columns);
     tiles_opened = 0;
     time_taken = 0.;
+    time_created = Unix.time ();
   }
 
 (** [check_mine g lst] checks how many mines in [lst] are in [g] *)
@@ -109,7 +112,11 @@ let flag_tile (coords : int * int) (grid : grid) =
       }
     else { grid with flagged = coords :: grid.flagged }
 
+let update_time grid =
+  { grid with time_taken = Unix.time () -. grid.time_created }
+
 let rec reveal_tile (coords : int * int) (grid : grid) =
+  let grid = update_time grid in
   if List.mem coords grid.opened then
     raise Already_Revealed (* Checks if already opened tile *)
   else if List.mem coords grid.flagged then

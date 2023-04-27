@@ -25,14 +25,13 @@ let add_score score (leaderboard : leaderboard) : leaderboard =
 let score_to_string score =
   score.name ^ ", Score: " ^ string_of_int score.score ^ ", Time Taken: "
   ^ string_of_float score.time_taken
-  ^ ", Tiles Opened: "
+  ^ " s, Tiles Opened: "
   ^ string_of_int score.tiles_opened
 
 let return_top_n number leaderboard =
-  let rec return_top_n_rec curr number leaderboard =
-    let number = min number (List.length leaderboard) in
-    if number <= 0 then ""
-    else if curr = number then ""
+  let actual_returns = min (List.length leaderboard) number in
+  let rec return_top_n_rec curr target (leaderboard : leaderboard) =
+    if curr > target then ""
     else
       match leaderboard with
       | [] -> ""
@@ -43,9 +42,11 @@ let return_top_n number leaderboard =
           ^ ". " ^ score_to_string curr_score
           ^ return_top_n_rec (curr + 1) number t
   in
-  return_top_n_rec 0 number leaderboard
+  return_top_n_rec 0 actual_returns leaderboard ^ "/n"
 
 let rec get_score_of name (leaderboard : leaderboard) =
   match leaderboard with
   | [] -> raise Not_found
   | h :: t -> if h.name = name then score_to_string h else get_score_of name t
+
+let size leaderboard = List.length leaderboard
