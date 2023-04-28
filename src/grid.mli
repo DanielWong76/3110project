@@ -15,6 +15,9 @@ exception Already_Revealed
 exception Game_Over
 (** Raised when [reveal_tile] opens a mine *)
 
+exception Win of grid
+(** Raised when [reveal_tile] causes a win and returns winning grid*)
+
 val new_grid : int -> int -> int -> grid
 (** [new_grid a b c] returns a new random grid of dimensions axb with c mines *)
 
@@ -71,3 +74,6 @@ val update_time : grid -> grid
 val export_grid : grid -> string
 (** [export_grid g] returns a string representation of the information of [g] to
     be printed out in a file*)
+
+val check_win : grid -> bool
+(** [check_win g] checks if grid g has won*)

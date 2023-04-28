@@ -12,6 +12,7 @@ type grid = {
 exception Out_of_Bounds
 exception Already_Revealed
 exception Game_Over
+exception Win of grid
 
 let empty : grid =
   {
@@ -162,8 +163,11 @@ let rec reveal_tile (coords : int * int) (grid : grid) =
                  (fun (i, j) (x, y) ->
                    if i > x then 1 else if i = x && j = y then 0 else -1)
                  surroundings)
-      else
-        { grid with opened = new_opened; tiles_opened = grid.tiles_opened + 1 }
+    else match grid.dimensions with
+      | (x,y) -> if (grid.tiles_opened + 1) = (x*y - List.length (grid.mines)) 
+        then raise (Win ({grid with opened = new_opened; tiles_opened = grid.tiles_opened + 1 }))
+    else
+      { grid with opened = new_opened; tiles_opened = grid.tiles_opened + 1 }
 
 let rec copy_string num string acc =
   if num <= 0 then acc else copy_string (num - 1) string (acc ^ string)
@@ -280,22 +284,30 @@ let get_opened_tiles grid = grid.tiles_opened
 let add_time grid time = { grid with time_taken = grid.time_taken +. time }
 let get_time_taken grid = grid.time_taken
 
-let rec list_to_string lst = 
-    match lst with 
-    | [] -> ""
-    | h::t -> match h with
-    | x,y -> string_of_int x ^ " " ^ string_of_int y ^ "\n" ^ list_to_string t in 
+let rec list_to_string lst =
+  match lst with
+  | [] -> ""
+  | h :: t -> (
+      match h with
+      | x, y ->
+          string_of_int x ^ " " ^ string_of_int y ^ "\n" ^ list_to_string t)
 
-let export_grid grid = 
-  
-  let mines = "Mines\n" ^ list_to_string grid.mines in 
-  let opened = "Opened\n" ^ list_to_string grid.tiles_opened in 
-  let flagged = "Flagged\n" ^ list_to_string grid.flagged in 
-  let dimensions = match grid.dimensions with 
-  | x,y -> "Dimensions\n" ^ string_of_int x ^ string_of_int y in 
-  let time_taken = "Time Taken\n" ^ string_of_float grid.time_taken in 
-  let time_created = "Time Created\n" ^ string_of_float grid.time_created in 
-  mines ^ opened ^ flagged ^ dimensions ^ time_taken ^ time_created
+let export_grid grid =
+  let mines = "Mines\n" ^ list_to_string grid.mines in
+  let opened = "Opened\n" ^ list_to_string grid.opened in
+  let flagged = "Flagged\n" ^ list_to_string grid.flagged in
+  let dimensions =
+    match grid.dimensions with
+    | x, y -> "Dimensions\n" ^ string_of_int x ^ string_of_int y
+  in
+  let tiles_opened = "Tiles Opened\n" ^ string_of_int grid.tiles_opened in
+  let time_taken = "Time Taken\n" ^ string_of_float grid.time_taken in
+  let time_created = "Time Created\n" ^ string_of_float grid.time_created in
+  mines ^ opened ^ flagged ^ dimensions ^ tiles_opened ^ time_taken
+  ^ time_created
+
+let check_win grid =  
+  match grid.dimensions with
+  | (x,y) -> (grid.tiles_opened) = (x*y - List.length (grid.mines))
 
 let _ = export_grid empty
-
