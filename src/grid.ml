@@ -12,6 +12,7 @@ type grid = {
 exception Out_of_Bounds
 exception Already_Revealed
 exception Game_Over
+exception Win of grid
 
 let empty : grid =
   {
@@ -162,8 +163,11 @@ let rec reveal_tile (coords : int * int) (grid : grid) =
                  (fun (i, j) (x, y) ->
                    if i > x then 1 else if i = x && j = y then 0 else -1)
                  surroundings)
-      else
-        { grid with opened = new_opened; tiles_opened = grid.tiles_opened + 1 }
+    else match grid.dimensions with
+      | (x,y) -> if (grid.tiles_opened + 1) = (x*y - List.length (grid.mines)) 
+        then raise (Win ({grid with opened = new_opened; tiles_opened = grid.tiles_opened + 1 }))
+    else
+      { grid with opened = new_opened; tiles_opened = grid.tiles_opened + 1 }
 
 let rec copy_string num string acc =
   if num <= 0 then acc else copy_string (num - 1) string (acc ^ string)
@@ -301,5 +305,9 @@ let export_grid grid =
   let time_created = "Time Created\n" ^ string_of_float grid.time_created in
   mines ^ opened ^ flagged ^ dimensions ^ tiles_opened ^ time_taken
   ^ time_created
+
+let check_win grid =  
+  match grid.dimensions with
+  | (x,y) -> (grid.tiles_opened) = (x*y - List.length (grid.mines))
 
 let _ = export_grid empty

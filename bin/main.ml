@@ -41,6 +41,9 @@ let open_tile (i, j) gr =
   | Game_Over ->
       print_string "\nBOOM! YOU LOSE\n";
       Grid.empty
+  | Win g ->
+      print_string "\nCongrats! You Win!\n";
+      g
 
 let flagged_tile (i, j) gr =
   try flag_tile (i, j) gr with
@@ -139,7 +142,14 @@ and main () =
         if action == "\nFlagging: \n" then flagged_tile (i, j) gr
         else open_tile (i, j) gr
       in
-      if w != Grid.empty then repl w
+      if w != Grid.empty then (
+        if Grid.check_win w then (
+          print_string "\nGame Over\n";
+          on_game_end w true;
+          Grid.reveal_all_mines w;
+          on_death ())
+        else 
+          repl w)
       else (
         print_string "\nGame Over\n";
         on_game_end gr false;
