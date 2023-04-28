@@ -279,3 +279,27 @@ let reveal_all_mines (grid : grid) =
 let get_opened_tiles grid = grid.tiles_opened
 let add_time grid time = { grid with time_taken = grid.time_taken +. time }
 let get_time_taken grid = grid.time_taken
+
+let rec list_to_string lst =
+  match lst with
+  | [] -> ""
+  | h :: t -> (
+      match h with
+      | x, y ->
+          string_of_int x ^ " " ^ string_of_int y ^ "\n" ^ list_to_string t)
+
+let export_grid grid =
+  let mines = "Mines\n" ^ list_to_string grid.mines in
+  let opened = "Opened\n" ^ list_to_string grid.opened in
+  let flagged = "Flagged\n" ^ list_to_string grid.flagged in
+  let dimensions =
+    match grid.dimensions with
+    | x, y -> "Dimensions\n" ^ string_of_int x ^ string_of_int y
+  in
+  let tiles_opened = "Tiles Opened\n" ^ string_of_int grid.tiles_opened in
+  let time_taken = "Time Taken\n" ^ string_of_float grid.time_taken in
+  let time_created = "Time Created\n" ^ string_of_float grid.time_created in
+  mines ^ opened ^ flagged ^ dimensions ^ tiles_opened ^ time_taken
+  ^ time_created
+
+let _ = export_grid empty

@@ -6,6 +6,12 @@ let leaderboard = ref (Leaderboard.empty ())
 (* TODO - Add a way to view leaderboard - Make a way to view new leaderboard
    after adding an entry, maybe make it localized? *)
 
+(* let export_game grid leaderboard file = let oc = if file = "" then open_out
+   "minesweeper.txt" else open_out file in let _ = grid in let _ = leaderboard
+   in let _ = oc in failwith "Unimplemented"
+
+   let _ = export_game *)
+
 let initialize difficulty =
   match String.lowercase_ascii difficulty with
   | "easy" -> new_grid 8 8 10

@@ -64,3 +64,6 @@ val add_time : grid -> float -> grid
 (** [add_time g t] returns a grid with the time of [t] to [g.time_taken] *)
 
 val get_time_taken : grid -> float
+
+val update_time : grid -> grid
+(** [update_time g] returns a grid with time updated from now. *)

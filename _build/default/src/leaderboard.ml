@@ -42,7 +42,7 @@ let return_top_n number leaderboard =
           ^ ". " ^ score_to_string curr_score
           ^ return_top_n_rec (curr + 1) number t
   in
-  return_top_n_rec 0 actual_returns leaderboard ^ "/n"
+  return_top_n_rec 0 actual_returns leaderboard ^ "\n"
 
 let rec get_score_of name (leaderboard : leaderboard) =
   match leaderboard with
