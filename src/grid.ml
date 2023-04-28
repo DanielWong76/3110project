@@ -301,5 +301,3 @@ let export_grid grid =
   let time_created = "Time Created\n" ^ string_of_float grid.time_created in
   mines ^ opened ^ flagged ^ dimensions ^ tiles_opened ^ time_taken
   ^ time_created
-
-let _ = export_grid empty

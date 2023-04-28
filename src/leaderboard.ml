@@ -50,3 +50,16 @@ let rec get_score_of name (leaderboard : leaderboard) =
   | h :: t -> if h.name = name then score_to_string h else get_score_of name t
 
 let size leaderboard = List.length leaderboard
+
+let export_leaderboard leaderboard =
+  let rec score_string l =
+    match l with
+    | [] -> ""
+    | h :: t ->
+        h.name ^ " " ^ string_of_int h.score ^ " "
+        ^ string_of_float h.time_taken
+        ^ " "
+        ^ string_of_int h.tiles_opened
+        ^ "\n" ^ score_string t
+  in
+  score_string leaderboard
