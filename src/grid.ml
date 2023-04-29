@@ -312,10 +312,10 @@ let export_grid grid =
     match grid.dimensions with
     | x, y -> "Dimensions\n" ^ string_of_int x ^ string_of_int y
   in
-  let tiles_opened = "Tiles Opened\n" ^ string_of_int grid.tiles_opened in
-  let time_taken = "Time Taken\n" ^ string_of_float grid.time_taken in
-  let time_created = "Time Created\n" ^ string_of_float grid.time_created in
-  mines ^ opened ^ flagged ^ dimensions ^ tiles_opened ^ time_taken
+  let tiles_opened = "\nTiles Opened\n" ^ string_of_int grid.tiles_opened in
+  let time_taken = "\nTime Taken\n" ^ string_of_float grid.time_taken in
+  let time_created = "\nTime Created\n" ^ string_of_float grid.time_created in
+  "Grid\n" ^ mines ^ opened ^ flagged ^ dimensions ^ tiles_opened ^ time_taken
   ^ time_created
 
 let check_win grid =

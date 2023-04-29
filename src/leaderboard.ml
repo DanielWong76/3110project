@@ -62,4 +62,4 @@ let export_leaderboard leaderboard =
         ^ string_of_int h.tiles_opened
         ^ "\n" ^ score_string t
   in
-  score_string leaderboard
+  "Leaderboard\n" ^ score_string leaderboard
