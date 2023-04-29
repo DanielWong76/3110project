@@ -73,3 +73,9 @@ val update_time : grid -> grid
 
 val check_win : grid -> bool
 (** [check_win g] checks if grid g has won*)
+
+val smile : grid
+(** A grid of a smile :)*)
+
+val pokeball : grid
+(** A grid of a pokeball*)

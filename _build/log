@@ -3,7 +3,7 @@
 # Shared cache: disabled
 # Workspace root: /home/daniel/cs3110/3110project
 # Auto-detected concurrency: 8
-$ /home/daniel/.opam/cs3110-2022fa/bin/ocamlc.opt -config > /tmp/dune_694e7f_output
+$ /home/daniel/.opam/cs3110-2022fa/bin/ocamlc.opt -config > /tmp/dune_7922cb_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
@@ -113,7 +113,3 @@ $ /home/daniel/.opam/cs3110-2022fa/bin/ocamlc.opt -config > /tmp/dune_694e7f_out
 #      ; windows_unicode = false
 #      }
 #  }
-$ (cd _build/default && /home/daniel/.opam/cs3110-2022fa/bin/ocamldep.opt -modules -impl src/grid.ml) > _build/default/src/.minesweeper.objs/minesweeper__Grid.impl.d
-$ (cd _build/default && /home/daniel/.opam/cs3110-2022fa/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I src/.minesweeper.objs/byte -I src/.minesweeper.objs/native -intf-suffix .ml -no-alias-deps -opaque -open Minesweeper -o src/.minesweeper.objs/native/minesweeper__Grid.cmx -c -impl src/grid.ml)
-$ (cd _build/default && /home/daniel/.opam/cs3110-2022fa/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -a -o src/minesweeper.cmxa src/.minesweeper.objs/native/minesweeper.cmx src/.minesweeper.objs/native/minesweeper__Leaderboard.cmx src/.minesweeper.objs/native/minesweeper__Grid.cmx)
-$ (cd _build/default && /home/daniel/.opam/cs3110-2022fa/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -o bin/main.exe /home/daniel/.opam/cs3110-2022fa/lib/ocaml/unix.cmxa -I /home/daniel/.opam/cs3110-2022fa/lib/ocaml src/minesweeper.cmxa -I /home/daniel/.opam/cs3110-2022fa/lib/ocaml /home/daniel/.opam/cs3110-2022fa/lib/ANSITerminal/ANSITerminal.cmxa -I /home/daniel/.opam/cs3110-2022fa/lib/ANSITerminal bin/.main.eobjs/native/dune__exe__Main.cmx)

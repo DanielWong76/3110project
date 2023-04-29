@@ -1,3 +1,4 @@
+
 type grid = {
   mines : (int * int) list; (* (a,b) represents the coordinates of a mine *)
   opened : (int * int) list;
@@ -309,5 +310,31 @@ let export_grid grid =
 let check_win grid =  
   match grid.dimensions with
   | (x,y) -> (grid.tiles_opened) = (x*y - List.length (grid.mines))
+
+let smile = {mines = [(2,3); (3,3); (4,3); (2,6); 
+  (3,6); (4,6); (6,2); (6,7); (7,2); (7,3); 
+  (7,4); (7,5); (7,6); (7,7)];
+  opened = [];
+  flagged = [];
+  dimensions = (8,8);
+  tiles_opened = 0;
+  time_taken = 0.;
+  time_created = Unix.time ()}
+
+let pokeball = {mines = [(1,6); (1,7); (1,8); (1,9);
+  (2,4); (2,5); (2,10); (2,11); (3,3); (3,12); (4,2); (4,13);
+  (5,2); (5,13); (6,1); (6,7); (6,8); (6,14); (7,1);
+  (7,2); (7,3); (7,4); (7,5); (7,6); (7,9); (7,10);
+  (7,11); (7,12); (7,13); (7,14); (8,1); (8,2); (8,3); 
+  (8,4); (8,5); (8,6); (8,9); (8,10); (8,11); (8,12); 
+  (8,13); (8,14); (14,6); (14,7); (14,8); (14,9);
+  (13,4); (13,5); (13,10); (13,11); (12,3); (12,12); (11,2); (11,13);
+  (10,2); (10,13); (9,1); (9,7); (9,8); (9,14);];
+  opened = [];
+  flagged = [];
+  dimensions = (14,14);
+  tiles_opened = 0;
+  time_taken = 0.;
+  time_created = Unix.time ()}
 
 let _ = export_grid empty
