@@ -164,11 +164,23 @@ let rec reveal_tile (coords : int * int) (grid : grid) =
                  (fun (i, j) (x, y) ->
                    if i > x then 1 else if i = x && j = y then 0 else -1)
                  surroundings)
-    else match grid.dimensions with
-      | (x,y) -> if (grid.tiles_opened + 1) = (x*y - List.length (grid.mines)) 
-        then raise (Win ({grid with opened = new_opened; tiles_opened = grid.tiles_opened + 1 }))
-    else
-      { grid with opened = new_opened; tiles_opened = grid.tiles_opened + 1 }
+      else
+        match grid.dimensions with
+        | x, y ->
+            if grid.tiles_opened + 1 = (x * y) - List.length grid.mines then
+              raise
+                (Win
+                   {
+                     grid with
+                     opened = new_opened;
+                     tiles_opened = grid.tiles_opened + 1;
+                   })
+            else
+              {
+                grid with
+                opened = new_opened;
+                tiles_opened = grid.tiles_opened + 1;
+              }
 
 let rec copy_string num string acc =
   if num <= 0 then acc else copy_string (num - 1) string (acc ^ string)
@@ -301,15 +313,15 @@ let export_grid grid =
     match grid.dimensions with
     | x, y -> "Dimensions\n" ^ string_of_int x ^ string_of_int y
   in
-  let tiles_opened = "Tiles Opened\n" ^ string_of_int grid.tiles_opened in
-  let time_taken = "Time Taken\n" ^ string_of_float grid.time_taken in
-  let time_created = "Time Created\n" ^ string_of_float grid.time_created in
-  mines ^ opened ^ flagged ^ dimensions ^ tiles_opened ^ time_taken
+  let tiles_opened = "\nTiles Opened\n" ^ string_of_int grid.tiles_opened in
+  let time_taken = "\nTime Taken\n" ^ string_of_float grid.time_taken in
+  let time_created = "\nTime Created\n" ^ string_of_float grid.time_created in
+  "Grid\n" ^ mines ^ opened ^ flagged ^ dimensions ^ tiles_opened ^ time_taken
   ^ time_created
 
-let check_win grid =  
+let check_win grid =
   match grid.dimensions with
-  | (x,y) -> (grid.tiles_opened) = (x*y - List.length (grid.mines))
+  | x, y -> grid.tiles_opened = (x * y) - List.length grid.mines
 
 let smile = {mines = [(2,3); (3,3); (4,3); (2,6); 
   (3,6); (4,6); (6,2); (6,7); (7,2); (7,3); 

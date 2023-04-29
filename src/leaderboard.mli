@@ -24,3 +24,7 @@ val get_score_of : string -> leaderboard -> string
     [l]. Raises: Not_found if [n] does not exist in [l] *)
 
 val size : leaderboard -> int
+
+val export_leaderboard : leaderboard -> string
+(** [export_leaderboard l] returns a string representation of [l] to be printed
+    out in a file *)

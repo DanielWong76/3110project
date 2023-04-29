@@ -1,0 +1,23 @@
+Mines
+3 8
+8 1
+4 8
+6 6
+4 4
+5 2
+3 5
+4 1
+1 4
+8 7
+Opened
+Flagged
+Dimensions
+88
+Tiles Opened
+0
+Time Taken
+0.
+Time Created
+1682727206.
+Bob 0 0. 0
+

@@ -71,6 +71,10 @@ val get_time_taken : grid -> float
 val update_time : grid -> grid
 (** [update_time g] returns a grid with time updated from now. *)
 
+val export_grid : grid -> string
+(** [export_grid g] returns a string representation of the information of [g] to
+    be printed out in a file*)
+
 val check_win : grid -> bool
 (** [check_win g] checks if grid g has won*)
 
