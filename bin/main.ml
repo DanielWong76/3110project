@@ -139,7 +139,7 @@ let rec on_death () =
   print_string "Try again? (Y/N)\n";
   match String.lowercase_ascii (read_line ()) with
   | "y" -> main ()
-  | "n" -> raise End_of_file
+  | "n" -> print_string "GGs \n"
   | _ ->
       print_string "Sorry, I didn't quite catch that...\n";
       on_death ()
