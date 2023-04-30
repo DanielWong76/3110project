@@ -14,7 +14,7 @@ exception Already_Revealed
 exception Game_Over
 exception Win of grid
 
-let empty () : grid =
+let empty : grid =
   {
     mines = [];
     opened = [];
@@ -43,7 +43,7 @@ let get_flagged (grid : grid) = List.length grid.flagged
 
 let rec generate_mines (mine_num : int) (mines : (int * int) list)
     (max_row : int) (max_column : int) =
-  let _ = Random.self_init in
+  let _ = Random.self_init () in
   if mine_num = 0 then mines
   else
     let new_mine = (Random.int max_column + 1, Random.int max_row + 1) in
@@ -545,5 +545,5 @@ let rec parse_keywords ic grid =
     raise e
 
 let import_grid ic =
-  let new_grid = empty () in
+  let new_grid = empty in
   parse_keywords ic new_grid

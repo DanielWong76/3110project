@@ -15,6 +15,7 @@ let export_game grid leaderboard file =
     ^ Leaderboard.export_leaderboard leaderboard
     ^ "\nFile End"
   in
+  let file = if file = "" then "minesweeper.txt" else file in
   Printf.fprintf oc "%s\n" output;
   close_out oc;
   print_string ("\nSaved in " ^ file ^ "!");
@@ -58,7 +59,7 @@ let open_tile (i, j) gr =
         \            ;   ;\n\
         \            /   \\\n\
          ___________/_ __ \\_____________";
-      Grid.empty ()
+      Grid.empty
 
 let flagged_tile (i, j) gr =
   try flag_tile (i, j) gr with
@@ -166,7 +167,7 @@ and pictionary () =
           if action == "\nFlagging: \n" then flagged_tile (i, j) gr
           else open_tile (i, j) gr
         in
-        if w != Grid.empty () then
+        if w != Grid.empty then
           if Grid.check_win w then (
             print_string "\n:)\n";
             on_game_end w true;
@@ -231,7 +232,7 @@ and main () =
         if action == "\nFlagging: \n" then flagged_tile (i, j) gr
         else open_tile (i, j) gr
       in
-      if w != Grid.empty () then repl w
+      if w != Grid.empty then repl w
       else (
         print_string "\nGame Over\n";
         on_game_end gr false;

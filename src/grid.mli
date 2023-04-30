@@ -3,7 +3,7 @@
 type grid
 (** The type [grid] represents the minesweeper grid *)
 
-val empty : unit -> grid
+val empty : grid
 (** Returns the representation of an empty grid *)
 
 exception Out_of_Bounds
