@@ -16,13 +16,15 @@ let export_game grid leaderboard file =
   print_string ("\nSaved in " ^ file ^ "!");
   ()
 
-(* let import_game file = let import_grid ic =
-
-   let ic = open_in file in try let line = input_line ic in (* read line,
-   discard \n *) print_endline line; (* write the result to stdout *) flush
-   stdout; (* write on the underlying device now *) close_in ic (* close the
-   input channel *) with e -> (* some unexpected exception occurs *)
-   close_in_noerr ic; (* emergency closing *) raise e *)
+let import_game file =
+  let rec import_grid ic =
+    try
+      let line = input_line ic in
+      match line with
+      | _ -> ()
+    with e -> raise e
+  in
+  ()
 
 let initialize difficulty =
   match String.lowercase_ascii difficulty with
