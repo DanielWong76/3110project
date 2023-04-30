@@ -21,6 +21,20 @@ let export_game grid leaderboard file =
   print_string ("\nSaved in " ^ file ^ "!");
   ()
 
+let import_game file_name =
+  (* (*
+     ________________________________________________________________________________
+     ________________________________________________________________________________-
+     ________________________________________________________________________________*)
+     ________________________________________________________________________________*)
+  (* [import_game file_name] mutates [leaderboard] to be the leaderboard
+     contained in [file_name] and returns a grid instance saved in
+     [file_name] *)
+  let ic = open_in file_name in
+  let grid = Grid.import_grid ic in
+  let _ = leaderboard := Leaderboard.import_leaderboard ic in
+  grid
+
 let initialize difficulty =
   match String.lowercase_ascii difficulty with
   | "easy" -> new_grid 8 8 10
