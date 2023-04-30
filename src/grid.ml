@@ -1,4 +1,3 @@
-
 type grid = {
   mines : (int * int) list; (* (a,b) represents the coordinates of a mine *)
   opened : (int * int) list;
@@ -15,7 +14,7 @@ exception Already_Revealed
 exception Game_Over
 exception Win of grid
 
-let empty : grid =
+let empty () : grid =
   {
     mines = [];
     opened = [];
@@ -306,47 +305,245 @@ let rec list_to_string lst =
           string_of_int x ^ " " ^ string_of_int y ^ "\n" ^ list_to_string t)
 
 let export_grid grid =
-  let mines = "Mines\n" ^ list_to_string grid.mines in
-  let opened = "Opened\n" ^ list_to_string grid.opened in
-  let flagged = "Flagged\n" ^ list_to_string grid.flagged in
+  let mines =
+    "Mines\n"
+    ^ string_of_int (List.length grid.mines)
+    ^ "\n" ^ list_to_string grid.mines
+  in
+  let opened =
+    "Opened\n"
+    ^ string_of_int (List.length grid.opened)
+    ^ "\n" ^ list_to_string grid.opened
+  in
+  let flagged =
+    "Flagged\n"
+    ^ string_of_int (List.length grid.flagged)
+    ^ "\n"
+    ^ list_to_string grid.flagged
+  in
   let dimensions =
     match grid.dimensions with
-    | x, y -> "Dimensions\n" ^ string_of_int x ^ string_of_int y
+    | x, y -> "Dimensions\n" ^ string_of_int x ^ " " ^ string_of_int y
   in
   let tiles_opened = "\nTiles Opened\n" ^ string_of_int grid.tiles_opened in
   let time_taken = "\nTime Taken\n" ^ string_of_float grid.time_taken in
   let time_created = "\nTime Created\n" ^ string_of_float grid.time_created in
   "Grid\n" ^ mines ^ opened ^ flagged ^ dimensions ^ tiles_opened ^ time_taken
-  ^ time_created
+  ^ time_created ^ "\nGrid End\n"
 
 let check_win grid =
   match grid.dimensions with
   | x, y -> grid.tiles_opened = (x * y) - List.length grid.mines
 
-let smile = {mines = [(2,3); (3,3); (4,3); (2,6); 
-  (3,6); (4,6); (6,2); (6,7); (7,2); (7,3); 
-  (7,4); (7,5); (7,6); (7,7)];
-  opened = [];
-  flagged = [];
-  dimensions = (8,8);
-  tiles_opened = 0;
-  time_taken = 0.;
-  time_created = Unix.time ()}
+let smile =
+  {
+    mines =
+      [
+        (2, 3);
+        (3, 3);
+        (4, 3);
+        (2, 6);
+        (3, 6);
+        (4, 6);
+        (6, 2);
+        (6, 7);
+        (7, 2);
+        (7, 3);
+        (7, 4);
+        (7, 5);
+        (7, 6);
+        (7, 7);
+      ];
+    opened = [];
+    flagged = [];
+    dimensions = (8, 8);
+    tiles_opened = 0;
+    time_taken = 0.;
+    time_created = Unix.time ();
+  }
 
-let pokeball = {mines = [(1,6); (1,7); (1,8); (1,9);
-  (2,4); (2,5); (2,10); (2,11); (3,3); (3,12); (4,2); (4,13);
-  (5,2); (5,13); (6,1); (6,7); (6,8); (6,14); (7,1);
-  (7,2); (7,3); (7,4); (7,5); (7,6); (7,9); (7,10);
-  (7,11); (7,12); (7,13); (7,14); (8,1); (8,2); (8,3); 
-  (8,4); (8,5); (8,6); (8,9); (8,10); (8,11); (8,12); 
-  (8,13); (8,14); (14,6); (14,7); (14,8); (14,9);
-  (13,4); (13,5); (13,10); (13,11); (12,3); (12,12); (11,2); (11,13);
-  (10,2); (10,13); (9,1); (9,7); (9,8); (9,14);];
-  opened = [];
-  flagged = [];
-  dimensions = (14,14);
-  tiles_opened = 0;
-  time_taken = 0.;
-  time_created = Unix.time ()}
+let pokeball =
+  {
+    mines =
+      [
+        (1, 6);
+        (1, 7);
+        (1, 8);
+        (1, 9);
+        (2, 4);
+        (2, 5);
+        (2, 10);
+        (2, 11);
+        (3, 3);
+        (3, 12);
+        (4, 2);
+        (4, 13);
+        (5, 2);
+        (5, 13);
+        (6, 1);
+        (6, 7);
+        (6, 8);
+        (6, 14);
+        (7, 1);
+        (7, 2);
+        (7, 3);
+        (7, 4);
+        (7, 5);
+        (7, 6);
+        (7, 9);
+        (7, 10);
+        (7, 11);
+        (7, 12);
+        (7, 13);
+        (7, 14);
+        (8, 1);
+        (8, 2);
+        (8, 3);
+        (8, 4);
+        (8, 5);
+        (8, 6);
+        (8, 9);
+        (8, 10);
+        (8, 11);
+        (8, 12);
+        (8, 13);
+        (8, 14);
+        (14, 6);
+        (14, 7);
+        (14, 8);
+        (14, 9);
+        (13, 4);
+        (13, 5);
+        (13, 10);
+        (13, 11);
+        (12, 3);
+        (12, 12);
+        (11, 2);
+        (11, 13);
+        (10, 2);
+        (10, 13);
+        (9, 1);
+        (9, 7);
+        (9, 8);
+        (9, 14);
+      ];
+    opened = [];
+    flagged = [];
+    dimensions = (14, 14);
+    tiles_opened = 0;
+    time_taken = 0.;
+    time_created = Unix.time ();
+  }
 
-let _ = export_grid empty
+let is_grid_keyword str =
+  match str with
+  | "Mines" -> true
+  | "Opened" -> true
+  | "Flagged" -> true
+  | "Dimensions" -> true
+  | "Tiles Opened" -> true
+  | "Time Taken" -> true
+  | "Time Created" -> true
+  | "Grid End" -> true
+  | "File End" -> true
+  | _ -> false
+
+let list_to_tuple lst =
+  (* Converts a list of two elements into a tuple *)
+  let x = int_of_string (List.hd lst) in
+  let y = int_of_string (List.nth lst 1) in
+  (x, y)
+
+let rec parse_coordinates (acc : (int * int) list) ic num =
+  (* Returns a (string*string) list of coordinates from [ic] up until a grid
+     keyword *)
+  if num <= 0 then acc
+  else
+    try
+      let line = input_line ic in
+      if is_grid_keyword line then acc
+      else
+        let raw = String.split_on_char ' ' line in
+        let coordinates = list_to_tuple raw in
+        let new_acc = coordinates :: acc in
+        parse_coordinates new_acc ic (num - 1)
+    with e ->
+      close_in_noerr ic;
+      raise e
+
+let parse_single_line ic =
+  try
+    let line = input_line ic in
+    if is_grid_keyword line then failwith "Unexpected Keyword"
+    else
+      let raw = String.split_on_char ' ' line in
+      list_to_tuple raw
+  with e ->
+    close_in_noerr ic;
+    raise e
+
+let parse_mines ic grid =
+  try
+    let line = int_of_string (input_line ic) in
+    let mines_loc = parse_coordinates [] ic line in
+    { grid with mines = mines_loc }
+  with e ->
+    close_in_noerr ic;
+    raise e
+
+let parse_opened ic grid =
+  try
+    let line = int_of_string (input_line ic) in
+    let opened_loc = parse_coordinates [] ic line in
+    { grid with opened = opened_loc }
+  with e ->
+    close_in_noerr ic;
+    raise e
+
+let parse_flagged ic grid =
+  try
+    let line = int_of_string (input_line ic) in
+    let flagged_loc = parse_coordinates [] ic line in
+    { grid with flagged = flagged_loc }
+  with e ->
+    close_in_noerr ic;
+    raise e
+
+let rec parse_keywords ic grid =
+  try
+    let keyword = input_line ic in
+    match keyword with
+    | "Mines" -> parse_keywords ic (parse_mines ic grid)
+    | "Opened" -> parse_keywords ic (parse_opened ic grid)
+    | "Flagged" -> parse_keywords ic (parse_flagged ic grid)
+    | "Dimensions" ->
+        let line = input_line ic in
+        if is_grid_keyword line then failwith "Unexpected Keyword"
+        else parse_keywords ic { grid with dimensions = parse_single_line ic }
+    | "Tiles Opened" ->
+        let line = input_line ic in
+        if is_grid_keyword line then failwith "Unexpected Keyword"
+        else
+          parse_keywords ic
+            { grid with tiles_opened = int_of_string (input_line ic) }
+    | "Time Taken" ->
+        let line = input_line ic in
+        if is_grid_keyword line then failwith "Unexpected Keyword"
+        else
+          parse_keywords ic
+            { grid with time_taken = float_of_string (input_line ic) }
+    | "Time Created" ->
+        let line = input_line ic in
+        if is_grid_keyword line then failwith "Unexpected Keyword"
+        else
+          parse_keywords ic
+            { grid with time_taken = float_of_string (input_line ic) }
+    | "Grid End" -> grid
+    | _ -> failwith "Grid Loading Error"
+  with e ->
+    close_in_noerr ic;
+    raise e
+
+let import_grid ic =
+  let new_grid = empty () in
+  parse_keywords ic new_grid

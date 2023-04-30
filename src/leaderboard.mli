@@ -27,4 +27,6 @@ val size : leaderboard -> int
 
 val export_leaderboard : leaderboard -> string
 (** [export_leaderboard l] returns a string representation of [l] to be printed
-    out in a file *)
+    out in a file in the form: Name Score Time_Taken Tiles_Opened *)
+
+val import_leaderboard : in_channel -> leaderboard

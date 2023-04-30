@@ -3,8 +3,8 @@
 type grid
 (** The type [grid] represents the minesweeper grid *)
 
-val empty : grid
-(** Representation of empty grid*)
+val empty : unit -> grid
+(** Returns the representation of an empty grid *)
 
 exception Out_of_Bounds
 (** Raised when coords given are out of bounds for the given grid *)
@@ -71,8 +71,15 @@ val get_time_taken : grid -> float
 val update_time : grid -> grid
 (** [update_time g] returns a grid with time updated from now. *)
 
+val export_grid : grid -> string
+(** [export_grid g] returns a string representation of the information of [g] to
+    be printed out in a file*)
+
 val check_win : grid -> bool
 (** [check_win g] checks if grid g has won*)
+
+val import_grid : in_channel -> grid
+(** [import_grid ic] returns a grid formed by the contents of [ic] *)
 
 val smile : grid
 (** A grid of a smile :)*)

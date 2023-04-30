@@ -62,4 +62,39 @@ let export_leaderboard leaderboard =
         ^ string_of_int h.tiles_opened
         ^ "\n" ^ score_string t
   in
-  "Leaderboard\n" ^ score_string leaderboard
+  "Leaderboard\n"
+  ^ string_of_int (List.length leaderboard)
+  ^ score_string leaderboard ^ "\nLeaderboard End\n"
+
+let rec parse_scores ic leaderboard num =
+  if num <= 0 then leaderboard
+  else
+    try
+      let line = input_line ic in
+      let raw = String.split_on_char ' ' line in
+      let sname = List.hd raw in
+      let sscore = int_of_string (List.nth raw 1) in
+      let stime_taken = float_of_string (List.nth raw 2) in
+      let stiles_opened = int_of_string (List.nth raw 3) in
+      let new_score =
+        {
+          name = sname;
+          score = sscore;
+          time_taken = stime_taken;
+          tiles_opened = stiles_opened;
+        }
+      in
+      let new_leaderboard = add_score new_score leaderboard in
+      parse_scores ic new_leaderboard (num - 1)
+    with e ->
+      close_in_noerr ic;
+      raise e
+
+let import_leaderboard ic =
+  let new_leaderboard = empty () in
+  try
+    let num = int_of_string (input_line ic) in
+    parse_scores ic new_leaderboard num
+  with e ->
+    close_in_noerr ic;
+    raise e

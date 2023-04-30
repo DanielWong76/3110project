@@ -6,11 +6,19 @@ let leaderboard = ref (Leaderboard.empty ())
 (* TODO - Add a way to view leaderboard - Make a way to view new leaderboard
    after adding an entry, maybe make it localized? *)
 
-(* let export_game grid leaderboard file = let oc = if file = "" then open_out
-   "minesweeper.txt" else open_out file in let _ = grid in let _ = leaderboard
-   in let _ = oc in failwith "Unimplemented"
-
-   let _ = export_game *)
+let export_game grid leaderboard file =
+  (* Takes in a grid and leaderboard instance and writes it to [file]
+     location. *)
+  let oc = if file = "" then open_out "minesweeper.txt" else open_out file in
+  let output =
+    Grid.export_grid grid
+    ^ Leaderboard.export_leaderboard leaderboard
+    ^ "\nFile End"
+  in
+  Printf.fprintf oc "%s\n" output;
+  close_out oc;
+  print_string ("\nSaved in " ^ file ^ "!");
+  ()
 
 let initialize difficulty =
   match String.lowercase_ascii difficulty with
@@ -39,19 +47,18 @@ let open_tile (i, j) gr =
       print_string "\nThat square has already been revealed\n";
       gr
   | Game_Over ->
-      print_string "\nBOOM! YOU LOSE\n
-        _ ._  _ , _ ._
-      (_ ' ( `  )_  .__)
-    ( (  (    )   `)  ) _)
-   (__ (_   (_ . _) _) ,__)
-       `~~`\ ' . /`~~`
-            ;   ;
-            /   \\
-___________/_ __ \\_____________";
-      Grid.empty
-  | Win g ->
-      print_string "\nCongrats! You Win!\n";
-      g
+      print_string
+        "\n\
+         BOOM! YOU LOSE\n\n\
+        \        _ ._  _ , _ ._\n\
+        \      (_ ' ( `  )_  .__)\n\
+        \    ( (  (    )   `)  ) _)\n\
+        \   (__ (_   (_ . _) _) ,__)\n\
+        \       `~~` ' . /`~~`\n\
+        \            ;   ;\n\
+        \            /   \\\n\
+         ___________/_ __ \\_____________";
+      Grid.empty ()
 
 let flagged_tile (i, j) gr =
   try flag_tile (i, j) gr with
@@ -63,13 +70,12 @@ let flagged_tile (i, j) gr =
       gr
 
 let rec choose_action () : string =
-  print_endline "Action: Sweep or Flag?\n";
+  print_endline "Action: Sweep, Flag or Save?\n";
   print_string "> ";
   match String.lowercase_ascii (read_line ()) with
   | "flag" -> "\nFlagging: \n"
   | "sweep" -> "\nSweeping: \n"
-  | "f" -> "\nFlagging: \n"
-  | "s" -> "\nSweeping: \n"
+  | "save" -> "\nSaving..."
   | _ ->
       print_string "Not an action\n";
       choose_action ()
@@ -122,11 +128,15 @@ let rec on_death () =
   | _ ->
       print_string "Sorry, I didn't quite catch that...\n";
       on_death ()
-    
-and pictionary () = 
-  print_string "\nWelcome to Pictionary!\nIn this mode, we will give you a series of prompts 
-  containing hints as to where mines are placed.
-  \nAt the end you will see the picture that the board forms!\n\n";
+
+and pictionary () =
+  print_string
+    "\n\
+     Welcome to Pictionary!\n\
+     In this mode, we will give you a series of prompts \n\
+    \  containing hints as to where mines are placed.\n\
+    \  \n\
+     At the end you will see the picture that the board forms!\n\n";
   let rec repl gr s =
     print_string s;
     print_string
@@ -144,42 +154,47 @@ and pictionary () =
     if i < 1 || i > x then (
       print_string "Not a valid row int\n";
       repl gr s)
-    else (print_string "Choose the number column\n";
-    print_string "> ";
-    let j = try read_int () with Failure _ -> -1 in
-    if j < 1 || j > y then (
-      print_string "Not a valid column int\n";
-      repl gr s)
-    else
-      let w =
-        if action == "\nFlagging: \n" then flagged_tile (i, j) gr
-        else open_tile (i, j) gr
-      in
-      if w != Grid.empty then (
-        if Grid.check_win w then (
-          print_string "\n:)\n";
-          on_game_end w true;
-          Grid.reveal_all_mines w;
-          on_death ())
-        else 
-          repl w s)
-      else (
-        print_string "\nnt\n";))
-    in let rec smile () = repl (Grid.smile) "\nPrompt: Be Happy!";
-      print_string "\nDo you want to play that level again? [Y/N]\n";
-      match String.lowercase_ascii (read_line ()) with
-        | "n" -> Grid.reveal_all_mines (Grid.smile)
-        | "y" -> smile ()
-        | _ -> Grid.reveal_all_mines (Grid.smile)
-    in smile ();
-    let rec continue gr s = (
-      print_string "\nDo you want to continue? [Y/N]\n";
-      match String.lowercase_ascii (read_line ()) with
-        | "n" -> ()
-        | "y" -> repl gr s
-        | _ -> print_string "Choose a valid option\n"; continue gr s)
-    in continue (Grid.pokeball) "\nPrompt: Gotta Catch em All!";
-    Grid.reveal_all_mines (Grid.pokeball)
+    else (
+      print_string "Choose the number column\n";
+      print_string "> ";
+      let j = try read_int () with Failure _ -> -1 in
+      if j < 1 || j > y then (
+        print_string "Not a valid column int\n";
+        repl gr s)
+      else
+        let w =
+          if action == "\nFlagging: \n" then flagged_tile (i, j) gr
+          else open_tile (i, j) gr
+        in
+        if w != Grid.empty () then
+          if Grid.check_win w then (
+            print_string "\n:)\n";
+            on_game_end w true;
+            Grid.reveal_all_mines w;
+            on_death ())
+          else repl w s
+        else print_string "\nnt\n")
+  in
+  let rec smile () =
+    repl Grid.smile "\nPrompt: Be Happy!";
+    print_string "\nDo you want to play that level again? [Y/N]\n";
+    match String.lowercase_ascii (read_line ()) with
+    | "n" -> Grid.reveal_all_mines Grid.smile
+    | "y" -> smile ()
+    | _ -> Grid.reveal_all_mines Grid.smile
+  in
+  smile ();
+  let rec continue gr s =
+    print_string "\nDo you want to continue? [Y/N]\n";
+    match String.lowercase_ascii (read_line ()) with
+    | "n" -> ()
+    | "y" -> repl gr s
+    | _ ->
+        print_string "Choose a valid option\n";
+        continue gr s
+  in
+  continue Grid.pokeball "\nPrompt: Gotta Catch em All!";
+  Grid.reveal_all_mines Grid.pokeball
 
 and main () =
   print_string "\n\nWelcome to Minesweeper\n";
@@ -190,7 +205,13 @@ and main () =
       ^ "\n");
     display_grid gr;
     let action = choose_action () in
-    print_string action;
+    if action = "\nSaving..." then
+      let file_name =
+        print_string "Filename? (leave blank for default)\n";
+        get_string ()
+      in
+      export_game gr !leaderboard file_name
+    else print_string action;
     print_string "Choose the number row\n";
     print_string "> ";
     let x = Grid.get_dimensions_x gr in
@@ -210,26 +231,24 @@ and main () =
         if action == "\nFlagging: \n" then flagged_tile (i, j) gr
         else open_tile (i, j) gr
       in
-      if w != Grid.empty then (
-        if Grid.check_win w then (
-          print_string "\nGame Over\n";
-          on_game_end w true;
-          Grid.reveal_all_mines w;
-          on_death ())
-        else 
-          repl w)
+      if w != Grid.empty () then repl w
       else (
         print_string "\nGame Over\n";
         on_game_end gr false;
         Grid.reveal_all_mines gr;
         on_death ())
-    in let rec game_mode () = 
-      print_string "\nPlease Choose a GameMode: Classic, Pictionary\n";
-      let i = read_line () in match String.lowercase_ascii i with 
-        | "classic" -> repl (initialize (choose ()))
-        | "pictionary" -> pictionary ()
-        | _ -> print_string "\nNot a Game Mode\n"; game_mode ()
-    in game_mode ()
+  in
+  let rec game_mode () =
+    print_string "\nPlease Choose a GameMode: Classic, Pictionary\n";
+    let i = read_line () in
+    match String.lowercase_ascii i with
+    | "classic" -> repl (initialize (choose ()))
+    | "pictionary" -> pictionary ()
+    | _ ->
+        print_string "\nNot a Game Mode\n";
+        game_mode ()
+  in
+  game_mode ()
 
 (* Execute the game engine. *)
 let () = main ()
