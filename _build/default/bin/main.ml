@@ -6,25 +6,11 @@ let leaderboard = ref (Leaderboard.empty ())
 (* TODO - Add a way to view leaderboard - Make a way to view new leaderboard
    after adding an entry, maybe make it localized? *)
 
-let export_game grid leaderboard file =
-  let oc = if file = "" then open_out "minesweeper.txt" else open_out file in
-  let output =
-    Grid.export_grid grid ^ "\n" ^ Leaderboard.export_leaderboard leaderboard
-  in
-  Printf.fprintf oc "%s\n" output;
-  close_out oc;
-  print_string ("\nSaved in " ^ file ^ "!");
-  ()
+(* let export_game grid leaderboard file = let oc = if file = "" then open_out
+   "minesweeper.txt" else open_out file in let _ = grid in let _ = leaderboard
+   in let _ = oc in failwith "Unimplemented"
 
-let import_game file =
-  let rec import_grid ic =
-    try
-      let line = input_line ic in
-      match line with
-      | _ -> ()
-    with e -> raise e
-  in
-  ()
+   let _ = export_game *)
 
 let initialize difficulty =
   match String.lowercase_ascii difficulty with
@@ -63,6 +49,9 @@ let open_tile (i, j) gr =
             /   \\
 ___________/_ __ \\_____________";
       Grid.empty
+  | Win g ->
+      print_string "\nCongrats! You Win!\n";
+      g
 
 let flagged_tile (i, j) gr =
   try flag_tile (i, j) gr with
@@ -74,12 +63,13 @@ let flagged_tile (i, j) gr =
       gr
 
 let rec choose_action () : string =
-  print_endline "Action: Sweep, Flag or Save?\n";
+  print_endline "Action: Sweep or Flag?\n";
   print_string "> ";
   match String.lowercase_ascii (read_line ()) with
   | "flag" -> "\nFlagging: \n"
   | "sweep" -> "\nSweeping: \n"
-  | "save" -> "\nSaving..."
+  | "f" -> "\nFlagging: \n"
+  | "s" -> "\nSweeping: \n"
   | _ ->
       print_string "Not an action\n";
       choose_action ()
@@ -200,13 +190,7 @@ and main () =
       ^ "\n");
     display_grid gr;
     let action = choose_action () in
-    if action = "\nSaving..." then
-      let file_name =
-        print_string "Filename? (leave blank for default)\n";
-        get_string ()
-      in
-      export_game gr !leaderboard file_name
-    else print_string action;
+    print_string action;
     print_string "Choose the number row\n";
     print_string "> ";
     let x = Grid.get_dimensions_x gr in
@@ -226,7 +210,14 @@ and main () =
         if action == "\nFlagging: \n" then flagged_tile (i, j) gr
         else open_tile (i, j) gr
       in
-      if w != Grid.empty then repl w
+      if w != Grid.empty then (
+        if Grid.check_win w then (
+          print_string "\nGame Over\n";
+          on_game_end w true;
+          Grid.reveal_all_mines w;
+          on_death ())
+        else 
+          repl w)
       else (
         print_string "\nGame Over\n";
         on_game_end gr false;
