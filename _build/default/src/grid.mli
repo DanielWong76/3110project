@@ -38,6 +38,8 @@ val flag_tile : int * int -> grid -> grid
     Raises: [Already_Revealed] if (a,b) is already open*)
 
 val print_coord : grid -> int -> int -> bool -> string
+(** [print_coord gr x y b] prints the tile of gr at (x,y) if b is false. If b is
+    true, reveals all tiles*)
 
 val display_grid : grid -> unit
 (** [display_grid a] prints a to the command line interface *)
