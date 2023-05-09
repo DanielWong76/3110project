@@ -1,3 +1,5 @@
+(** Representation and control of the leaderboard *)
+
 type score
 (** The type that stores one individual score *)
 
@@ -22,6 +24,9 @@ val return_top_n : int -> leaderboard -> string
 val get_score_of : string -> leaderboard -> string
 (** [get_score_of n l] returns the string rep of the highest score of [n] in
     [l]. Raises: Not_found if [n] does not exist in [l] *)
+
+val score_to_string : score -> string
+(** [score_to_string s] returns the string rep of the score [s] in *)
 
 val size : leaderboard -> int
 

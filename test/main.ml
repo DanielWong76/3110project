@@ -136,7 +136,7 @@ let leaderboard_tests =
     create_score_test "create score test 0" "" 0 0.0 0
       ", Score: 0, Time Taken: 0. s, Tiles Opened: 0";
     return_top_n_test "return_top_n_test with empty leaderboard" 1
-      (Leaderboard.empty ()) "";
+      (Leaderboard.empty ()) "\n";
     return_top_n_test "return_top_n_test with leaderboard with just one" 1
       (Leaderboard.empty ()
       |> Leaderboard.add_score (Leaderboard.create_score "Bob" 9 9.9 9))

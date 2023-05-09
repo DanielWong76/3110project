@@ -9,9 +9,11 @@ let leaderboard = ref (Leaderboard.empty ())
 let export_game grid leaderboard file =
   (* Takes in a grid and leaderboard instance and writes it to [file]
      location. *)
-  let oc = if file = "" then open_out "minesweeper.txt" else open_out file in
+  let oc =
+    if file = "" then open_out "minesweeper.txt" else open_out (file ^ ".txt")
+  in
   let output =
-    "File" ^ Grid.export_grid grid
+    Grid.export_grid grid
     ^ Leaderboard.export_leaderboard leaderboard
     ^ "File End"
   in
@@ -232,7 +234,7 @@ and main () =
     let action = choose_action () in
     if action = "\nSaving..." then
       let file_name =
-        print_string "Filename? (leave blank for default)\n";
+        print_string "Save name? (leave blank for default)\n";
         get_string ()
       in
       export_game gr !leaderboard file_name
@@ -280,7 +282,13 @@ and main () =
     print_string "\nChoose: New, Resume\n";
     let i = read_line () in
     match String.lowercase_ascii i with
-    | "resume" -> repl (import_game "minesweeper.txt")
+    | "resume" ->
+        print_string
+          "\nPlease insert save name to load or leave blank for default.\n";
+        let i = read_line () in
+        if String.lowercase_ascii i = "" then
+          repl (import_game "minesweeper.txt")
+        else repl (import_game (i ^ ".txt"))
     | "new" -> game_mode ()
     | _ ->
         print_string "\nNot an option\n";
