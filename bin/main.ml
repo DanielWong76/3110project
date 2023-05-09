@@ -11,9 +11,9 @@ let export_game grid leaderboard file =
      location. *)
   let oc = if file = "" then open_out "minesweeper.txt" else open_out file in
   let output =
-    Grid.export_grid grid
+    "File" ^ Grid.export_grid grid
     ^ Leaderboard.export_leaderboard leaderboard
-    ^ "\nFile End"
+    ^ "File End"
   in
   let file = if file = "" then "minesweeper.txt" else file in
   Printf.fprintf oc "%s\n" output;
@@ -21,14 +21,25 @@ let export_game grid leaderboard file =
   print_string ("\nSaved in " ^ file ^ "!\n");
   ()
 
+let rec parse_file ic grid leaderboard =
+  let line = input_line ic in
+  match line with
+  | "File" -> parse_file ic grid leaderboard
+  | "Grid" ->
+      let new_grid = Grid.import_grid ic in
+      parse_file ic new_grid leaderboard
+  | "Leaderboard" ->
+      let _ = leaderboard := Leaderboard.import_leaderboard ic in
+      parse_file ic grid leaderboard
+  | "File End" -> grid
+  | a -> failwith ("parse_file error: " ^ a)
+
 let import_game file_name =
   (* [import_game file_name] mutates [leaderboard] to be the leaderboard
      contained in [file_name] and returns a grid instance saved in
      [file_name] *)
   let ic = open_in file_name in
-  let grid = Grid.import_grid ic in
-  let _ = leaderboard := Leaderboard.import_leaderboard ic in
-  grid
+  parse_file ic Grid.empty leaderboard
 
 let initialize difficulty =
   match String.lowercase_ascii difficulty with

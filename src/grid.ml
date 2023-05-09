@@ -471,16 +471,10 @@ let rec parse_coordinates (acc : (int * int) list) ic num =
       close_in_noerr ic;
       raise e
 
-let parse_single_line ic =
-  try
-    let line = input_line ic in
-    if is_grid_keyword line then failwith "Unexpected Keyword"
-    else
-      let raw = String.split_on_char ' ' line in
-      list_to_tuple raw
-  with e ->
-    close_in_noerr ic;
-    raise e
+(* let parse_single_line ic = try let line = input_line ic in if is_grid_keyword
+   line then failwith ("Unexpected Keyword: " ^ line) else let raw =
+   String.split_on_char ' ' line in list_to_tuple raw with e -> close_in_noerr
+   ic; raise e *)
 
 let parse_mines ic grid =
   try
@@ -519,27 +513,24 @@ let rec parse_keywords ic grid =
     | "Dimensions" ->
         let line = input_line ic in
         if is_grid_keyword line then failwith "Unexpected Keyword"
-        else parse_keywords ic { grid with dimensions = parse_single_line ic }
+        else
+          let coords = String.split_on_char ' ' line in
+          let formatted = list_to_tuple coords in
+          parse_keywords ic { grid with dimensions = formatted }
     | "Tiles Opened" ->
         let line = input_line ic in
         if is_grid_keyword line then failwith "Unexpected Keyword"
-        else
-          parse_keywords ic
-            { grid with tiles_opened = int_of_string (input_line ic) }
+        else parse_keywords ic { grid with tiles_opened = int_of_string line }
     | "Time Taken" ->
         let line = input_line ic in
         if is_grid_keyword line then failwith "Unexpected Keyword"
-        else
-          parse_keywords ic
-            { grid with time_taken = float_of_string (input_line ic) }
+        else parse_keywords ic { grid with time_taken = float_of_string line }
     | "Time Created" ->
         let line = input_line ic in
         if is_grid_keyword line then failwith "Unexpected Keyword"
-        else
-          parse_keywords ic
-            { grid with time_taken = float_of_string (input_line ic) }
+        else parse_keywords ic { grid with time_taken = float_of_string line }
     | "Grid End" -> grid
-    | _ -> failwith "Grid Loading Error"
+    | a -> failwith ("Grid Loading Error: " ^ a)
   with e ->
     close_in_noerr ic;
     raise e

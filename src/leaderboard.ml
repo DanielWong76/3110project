@@ -52,19 +52,20 @@ let rec get_score_of name (leaderboard : leaderboard) =
 let size leaderboard = List.length leaderboard
 
 let export_leaderboard leaderboard =
-  let rec score_string l =
+  let rec score_string l count =
     match l with
     | [] -> ""
     | h :: t ->
-        h.name ^ " " ^ string_of_int h.score ^ " "
+        string_of_int count ^ ". " ^ h.name ^ " " ^ string_of_int h.score ^ " "
         ^ string_of_float h.time_taken
         ^ " "
         ^ string_of_int h.tiles_opened
-        ^ "\n" ^ score_string t
+        ^ "\n"
+        ^ score_string t (count + 1)
   in
   "Leaderboard\n"
   ^ string_of_int (List.length leaderboard)
-  ^ score_string leaderboard ^ "\nLeaderboard End\n"
+  ^ "\n" ^ score_string leaderboard 1 ^ "Leaderboard End\n"
 
 let rec parse_scores ic leaderboard num =
   if num <= 0 then leaderboard
@@ -72,10 +73,10 @@ let rec parse_scores ic leaderboard num =
     try
       let line = input_line ic in
       let raw = String.split_on_char ' ' line in
-      let sname = List.hd raw in
-      let sscore = int_of_string (List.nth raw 1) in
-      let stime_taken = float_of_string (List.nth raw 2) in
-      let stiles_opened = int_of_string (List.nth raw 3) in
+      let sname = List.nth raw 1 in
+      let sscore = int_of_string (List.nth raw 2) in
+      let stime_taken = float_of_string (List.nth raw 3) in
+      let stiles_opened = int_of_string (List.nth raw 4) in
       let new_score =
         {
           name = sname;
@@ -94,7 +95,9 @@ let import_leaderboard ic =
   let new_leaderboard = empty () in
   try
     let num = int_of_string (input_line ic) in
-    parse_scores ic new_leaderboard num
+    let res = parse_scores ic new_leaderboard num in
+    if input_line ic = "Leaderboard End" then res
+    else failwith "Missing Leaderboard End"
   with e ->
     close_in_noerr ic;
     raise e

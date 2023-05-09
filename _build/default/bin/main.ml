@@ -11,15 +11,35 @@ let export_game grid leaderboard file =
      location. *)
   let oc = if file = "" then open_out "minesweeper.txt" else open_out file in
   let output =
-    Grid.export_grid grid
+    "File" ^ Grid.export_grid grid
     ^ Leaderboard.export_leaderboard leaderboard
-    ^ "\nFile End"
+    ^ "File End"
   in
   let file = if file = "" then "minesweeper.txt" else file in
   Printf.fprintf oc "%s\n" output;
   close_out oc;
-  print_string ("\nSaved in " ^ file ^ "!");
+  print_string ("\nSaved in " ^ file ^ "!\n");
   ()
+
+let rec parse_file ic grid leaderboard =
+  let line = input_line ic in
+  match line with
+  | "File" -> parse_file ic grid leaderboard
+  | "Grid" ->
+      let new_grid = Grid.import_grid ic in
+      parse_file ic new_grid leaderboard
+  | "Leaderboard" ->
+      let _ = leaderboard := Leaderboard.import_leaderboard ic in
+      parse_file ic grid leaderboard
+  | "File End" -> grid
+  | a -> failwith ("parse_file error: " ^ a)
+
+let import_game file_name =
+  (* [import_game file_name] mutates [leaderboard] to be the leaderboard
+     contained in [file_name] and returns a grid instance saved in
+     [file_name] *)
+  let ic = open_in file_name in
+  parse_file ic Grid.empty leaderboard
 
 let initialize difficulty =
   match String.lowercase_ascii difficulty with
@@ -110,7 +130,7 @@ let rec on_game_end grid victory =
   | "y" ->
       print_string "What is your name?\n";
       let name = get_string () in
-      let _ = print_string "Score saved!" in
+      let _ = print_string "Score saved!\n" in
       let new_score =
         Leaderboard.create_score name
           (calculate_score grid victory)
@@ -118,14 +138,18 @@ let rec on_game_end grid victory =
           (Grid.get_opened_tiles grid)
       in
       let _ = leaderboard := Leaderboard.add_score new_score !leaderboard in
-      print_string (Leaderboard.return_top_n 10 !leaderboard)
+      print_string
+        ("\nLEADERBOARD\n"
+       ^ "-------------------------------------------------------"
+        ^ Leaderboard.return_top_n 10 !leaderboard
+        ^ "\n")
   | _ -> on_game_end grid victory
 
 let rec on_death () =
   print_string "Try again? (Y/N)\n";
   match String.lowercase_ascii (read_line ()) with
   | "y" -> main ()
-  | "n" -> raise End_of_file
+  | "n" -> print_string "GGs \n"
   | _ ->
       print_string "Sorry, I didn't quite catch that...\n";
       on_death ()
@@ -212,32 +236,33 @@ and main () =
         get_string ()
       in
       export_game gr !leaderboard file_name
-    else print_string action;
-    print_string "Choose the number row\n";
-    print_string "> ";
-    let x = Grid.get_dimensions_x gr in
-    let y = Grid.get_dimensions_y gr in
-    let i = try read_int () with Failure _ -> -1 in
-    if i < 1 || i > x then (
-      print_string "Not a valid row int\n";
-      repl gr)
-    else print_string "Choose the number column\n";
-    print_string "> ";
-    let j = try read_int () with Failure _ -> -1 in
-    if j < 1 || j > y then (
-      print_string "Not a valid column int\n";
-      repl gr)
     else
-      let w =
-        if action == "\nFlagging: \n" then flagged_tile (i, j) gr
-        else open_tile (i, j) gr
-      in
-      if w != Grid.empty then repl w
-      else (
-        print_string "\nGame Over\n";
-        on_game_end gr false;
-        Grid.reveal_all_mines gr;
-        on_death ())
+      let _ = print_string action in
+      print_string "Choose the number row\n";
+      print_string "> ";
+      let x = Grid.get_dimensions_x gr in
+      let y = Grid.get_dimensions_y gr in
+      let i = try read_int () with Failure _ -> -1 in
+      if i < 1 || i > x then (
+        print_string "Not a valid row int\n";
+        repl gr)
+      else print_string "Choose the number column\n";
+      print_string "> ";
+      let j = try read_int () with Failure _ -> -1 in
+      if j < 1 || j > y then (
+        print_string "Not a valid column int\n";
+        repl gr)
+      else
+        let w =
+          if action == "\nFlagging: \n" then flagged_tile (i, j) gr
+          else open_tile (i, j) gr
+        in
+        if w != Grid.empty then repl w
+        else (
+          print_string "\nGame Over\n";
+          on_game_end gr false;
+          Grid.reveal_all_mines gr;
+          on_death ())
   in
   let rec game_mode () =
     print_string "\nPlease Choose a GameMode: Classic, Pictionary\n";
@@ -249,7 +274,19 @@ and main () =
         print_string "\nNot a Game Mode\n";
         game_mode ()
   in
-  game_mode ()
+  let rec resume_or_save () =
+    print_string
+      "\nWould you like to start a new game or resume your old one?\n";
+    print_string "\nChoose: New, Resume\n";
+    let i = read_line () in
+    match String.lowercase_ascii i with
+    | "resume" -> repl (import_game "minesweeper.txt")
+    | "new" -> game_mode ()
+    | _ ->
+        print_string "\nNot an option\n";
+        resume_or_save ()
+  in
+  resume_or_save ()
 
 (* Execute the game engine. *)
 let () = main ()
