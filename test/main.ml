@@ -2,6 +2,20 @@ open OUnit2
 open Minesweeper
 open Grid
 
+(** Test Plan Files located in bin (main.ml) were manually tested in Utop by
+    running the game. Files in src (grid.ml and leaderboard.ml) were tested
+    through combination of OUnit and manually.
+
+    Tests by OUnit were developed through both glass-box testing and black-box
+    testing. Were based on looking at code and also the specification given.
+
+    The testing approach demonstrates the correctness of the system because the
+    biggest rubric for seeing if it was working properly was simply playing the
+    game and making sure all functionality worked as expected. By doing this, it
+    simultaneously tested all modules. After playing through and testing all
+    outcomes, the OUnit tests further helped ensure individual functions of the
+    modules were correct in case we missed a possible bug through the
+    playthrough. *)
 let string_to_string string = string
 
 let get_dimensions_test (description : string) (grid : grid)

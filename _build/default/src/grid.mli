@@ -70,6 +70,7 @@ val add_time : grid -> float -> grid
 (** [add_time g t] returns a grid with the time of [t] to [g.time_taken] *)
 
 val get_time_taken : grid -> float
+(** [get_time_taken gr] gets the amount of time taken for a grid gr*)
 
 val update_time : grid -> grid
 (** [update_time g] returns a grid with time updated from now. *)
@@ -106,8 +107,6 @@ val generate_mines : int -> (int * int) list -> int -> int -> (int * int) list
 val check_mines : grid -> (int * int) list -> int
 (** [check_mine g lst] checks how many mines in [lst] are in [g] *)
 
-val fold_grid : (int * int -> grid -> grid) -> grid -> (int * int) list -> grid
-(** Like fold for a list but for grid representation *)
-
-val copy_string : int -> string -> string -> string
-(** Copies string *)
+val add_coord_numbers_to_grid : grid -> string
+(** Adds the column coordinates to the string rep of the grid. Call this After
+    the end of the print_coord function *)

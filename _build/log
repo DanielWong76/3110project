@@ -1,9 +1,9 @@
-# dune build @doc
+# dune exec ./bin/main.exe
 # OCAMLPARAM: unset
 # Shared cache: disabled
 # Workspace root: /home/caitlien/3110/3110project
 # Auto-detected concurrency: 8
-$ /home/caitlien/.opam/cs3110-2023sp/bin/ocamlc.opt -config > /tmp/dune_1803d9_output
+$ /home/caitlien/.opam/cs3110-2023sp/bin/ocamlc.opt -config > /tmp/dune_aa9ee9_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
@@ -115,3 +115,17 @@ $ /home/caitlien/.opam/cs3110-2023sp/bin/ocamlc.opt -config > /tmp/dune_1803d9_o
 #      ; windows_unicode = false
 #      }
 #  }
+$ (cd _build/default && /home/caitlien/.opam/cs3110-2023sp/bin/ocamldep.opt -modules -intf src/leaderboard.mli) > _build/default/src/.minesweeper.objs/minesweeper__Leaderboard.intf.d
+$ (cd _build/default && /home/caitlien/.opam/cs3110-2023sp/bin/ocamldep.opt -modules -impl src/minesweeper.ml) > _build/default/src/.minesweeper.objs/minesweeper.impl.d
+$ (cd _build/default && /home/caitlien/.opam/cs3110-2023sp/bin/ocamldep.opt -modules -intf src/grid.mli) > _build/default/src/.minesweeper.objs/minesweeper__Grid.intf.d
+$ (cd _build/default && /home/caitlien/.opam/cs3110-2023sp/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -49 -nopervasives -nostdlib -g -I src/.minesweeper.objs/byte -I src/.minesweeper.objs/native -intf-suffix .ml-gen -no-alias-deps -opaque -o src/.minesweeper.objs/native/minesweeper__.cmx -c -impl src/minesweeper__.ml-gen)
+$ (cd _build/default && /home/caitlien/.opam/cs3110-2023sp/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I src/.minesweeper.objs/byte -no-alias-deps -opaque -open Minesweeper__ -o src/.minesweeper.objs/byte/minesweeper__Leaderboard.cmi -c -intf src/leaderboard.mli)
+$ (cd _build/default && /home/caitlien/.opam/cs3110-2023sp/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I src/.minesweeper.objs/byte -no-alias-deps -opaque -open Minesweeper__ -o src/.minesweeper.objs/byte/minesweeper__Grid.cmi -c -intf src/grid.mli)
+$ (cd _build/default && /home/caitlien/.opam/cs3110-2023sp/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I src/.minesweeper.objs/byte -no-alias-deps -opaque -open Minesweeper__ -o src/.minesweeper.objs/byte/minesweeper.cmi -c -intf src/minesweeper.mli)
+$ (cd _build/default && /home/caitlien/.opam/cs3110-2023sp/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I bin/.main.eobjs/byte -I /home/caitlien/.opam/cs3110-2023sp/lib/ANSITerminal -I src/.minesweeper.objs/byte -no-alias-deps -opaque -o bin/.main.eobjs/byte/dune__exe__Main.cmi -c -intf bin/main.mli)
+$ (cd _build/default && /home/caitlien/.opam/cs3110-2023sp/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I src/.minesweeper.objs/byte -I src/.minesweeper.objs/native -intf-suffix .ml -no-alias-deps -opaque -open Minesweeper__ -o src/.minesweeper.objs/native/minesweeper__Leaderboard.cmx -c -impl src/leaderboard.ml)
+$ (cd _build/default && /home/caitlien/.opam/cs3110-2023sp/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I src/.minesweeper.objs/byte -I src/.minesweeper.objs/native -intf-suffix .ml -no-alias-deps -opaque -open Minesweeper__ -o src/.minesweeper.objs/native/minesweeper.cmx -c -impl src/minesweeper.ml)
+$ (cd _build/default && /home/caitlien/.opam/cs3110-2023sp/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I bin/.main.eobjs/byte -I bin/.main.eobjs/native -I /home/caitlien/.opam/cs3110-2023sp/lib/ANSITerminal -I src/.minesweeper.objs/byte -I src/.minesweeper.objs/native -intf-suffix .ml -no-alias-deps -opaque -o bin/.main.eobjs/native/dune__exe__Main.cmx -c -impl bin/main.ml)
+$ (cd _build/default && /home/caitlien/.opam/cs3110-2023sp/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I src/.minesweeper.objs/byte -I src/.minesweeper.objs/native -intf-suffix .ml -no-alias-deps -opaque -open Minesweeper__ -o src/.minesweeper.objs/native/minesweeper__Grid.cmx -c -impl src/grid.ml)
+$ (cd _build/default && /home/caitlien/.opam/cs3110-2023sp/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -a -o src/minesweeper.cmxa src/.minesweeper.objs/native/minesweeper__.cmx src/.minesweeper.objs/native/minesweeper__Grid.cmx src/.minesweeper.objs/native/minesweeper__Leaderboard.cmx src/.minesweeper.objs/native/minesweeper.cmx)
+$ (cd _build/default && /home/caitlien/.opam/cs3110-2023sp/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -o bin/main.exe /home/caitlien/.opam/cs3110-2023sp/lib/ocaml/unix.cmxa -I /home/caitlien/.opam/cs3110-2023sp/lib/ocaml src/minesweeper.cmxa -I /home/caitlien/.opam/cs3110-2023sp/lib/ocaml /home/caitlien/.opam/cs3110-2023sp/lib/ANSITerminal/ANSITerminal.cmxa -I /home/caitlien/.opam/cs3110-2023sp/lib/ANSITerminal bin/.main.eobjs/native/dune__exe__Main.cmx)
