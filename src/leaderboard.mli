@@ -29,9 +29,11 @@ val score_to_string : score -> string
 (** [score_to_string s] returns the string rep of the score [s] in *)
 
 val size : leaderboard -> int
+(** [size l] returns the size of the leaderboard l *)
 
 val export_leaderboard : leaderboard -> string
 (** [export_leaderboard l] returns a string representation of [l] to be printed
     out in a file in the form: Name Score Time_Taken Tiles_Opened *)
 
 val import_leaderboard : in_channel -> leaderboard
+(** [import_leaderboard l] imports the leaderboard in file [l]*)

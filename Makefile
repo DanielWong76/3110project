@@ -1,4 +1,5 @@
 .PHONY: test
+
 doc:
 	dune build @doc
 

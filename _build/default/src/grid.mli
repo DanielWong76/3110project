@@ -57,6 +57,9 @@ val get_mines : grid -> int
 val get_flagged : grid -> int
 (** [get_flagged a] returns the number of flagged tiles of a *)
 
+val determine_num : grid -> int * int -> int
+(** [determine_num gr i] returns the number of the tile at i on gr *)
+
 val reveal_all_mines : grid -> unit
 (** [reveal_all_mines g] prints g with all player progress and mines revealed *)
 
@@ -86,3 +89,25 @@ val smile : grid
 
 val pokeball : grid
 (** A grid of a pokeball*)
+
+val unrevealed : string
+(** Representation of unrevealed tiles *)
+
+val mine : string
+(** Representation of mines *)
+
+val flagged : string
+(** Representation of flagged tile*)
+
+val generate_mines : int -> (int * int) list -> int -> int -> (int * int) list
+(** [generate_mines a b x y] generates a mines in an x by y grid. Returns a list
+    of the coordinates of all the mines generated *)
+
+val check_mines : grid -> (int * int) list -> int
+(** [check_mine g lst] checks how many mines in [lst] are in [g] *)
+
+val fold_grid : (int * int -> grid -> grid) -> grid -> (int * int) list -> grid
+(** Like fold for a list but for grid representation *)
+
+val copy_string : int -> string -> string -> string
+(** Copies string *)

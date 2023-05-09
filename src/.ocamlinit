@@ -1,2 +1,0 @@
-#use "grid.ml";;
-print_endline "BAL";;
