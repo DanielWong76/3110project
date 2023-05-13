@@ -117,9 +117,9 @@ let open_tile (i, j) gr =
         \            /   \\\n\
          ___________/_ __ \\_____________";
       Grid.empty
-  | Win _ ->
+  | Win g ->
       print_string "\nYOU WIN!\n ٩(๑･ิᴗ･ิ)۶٩(･ิᴗ･ิ๑)۶\n";
-      Grid.empty
+      g
 
 let flagged_tile (i, j) gr =
   try flag_tile (i, j) gr with
@@ -210,7 +210,7 @@ let rec on_game_end grid victory =
   | _ -> on_game_end grid victory
 
 let rec on_death () =
-  print_string "Try again?\n";
+  print_string "Try again? [Y/N]\n";
   print_string "> ";
   match String.lowercase_ascii (read_line ()) with
   | "yes" -> main ()
@@ -258,27 +258,29 @@ and pictionary () =
           if action == "\nFlagging: \n" then flagged_tile (i, j) gr
           else open_tile (i, j) gr
         in
-        if w != Grid.empty then
-          if Grid.check_win w then (
-            print_string "\n:)\n";
-            on_game_end w true;
-            Grid.reveal_all_mines w;
-            on_death ())
-          else repl w s
-        else print_string "\nnt\n")
-  in
-  let rec smile () =
+        if (w != Grid.empty) then
+          if Grid.check_win w then 
+            (print_string "\n:)\n";
+            Grid.reveal_all_mines w)
+          else repl w s 
+        else (print_string "\nnt\n"; 
+          let rec again () =
+            print_string "Try again? [Y/N]\n";
+            print_string "> ";
+            match String.lowercase_ascii (read_line ()) with
+            | "yes" -> repl (reset_grid gr) s
+            | "y" -> repl (reset_grid gr) s
+            | "n" -> Grid.reveal_all_mines (reset_grid gr)
+            | "no" -> Grid.reveal_all_mines (reset_grid gr)
+            | _ ->
+                print_string "Sorry, I didn't quite catch that...\n";
+                again ()
+          in again ()))
+  in let _ =
     repl Grid.smile "\nPrompt: Be Happy!";
-    print_string "\nDo you want to play that level again? [Y/N]\n";
-    print_string "> ";
-    match String.lowercase_ascii (read_line ()) with
-    | "n" -> Grid.reveal_all_mines Grid.smile
-    | "y" -> smile ()
-    | _ -> Grid.reveal_all_mines Grid.smile
   in
-  smile ();
   let rec continue gr s =
-    print_string "\nDo you want to continue? [Y/N]\n";
+    print_string "\nDo you want to try the next level? [Y/N]\n";
     print_string "> ";
     match String.lowercase_ascii (read_line ()) with
     | "n" -> ()
@@ -287,8 +289,9 @@ and pictionary () =
         print_string "Choose a valid option\n";
         continue gr s
   in
-  continue Grid.pokeball "\nPrompt: Gotta Catch em All!";
-  Grid.reveal_all_mines Grid.pokeball
+  let _ = continue Grid.pokeball "\nPrompt: Gotta Catch em All!" in
+  continue Grid.charmander "\nPrompt: Catch that Charmander with your pokeball!";
+  print_string "\nThanks for playing!\n"
 
 and main () =
   print_string "\n\nWelcome to Minesweeper\n";
@@ -327,7 +330,13 @@ and main () =
           if action == "\nFlagging: \n" then flagged_tile (i, j) gr
           else open_tile (i, j) gr
         in
-        if w != Grid.empty then repl w
+        if w != Grid.empty then (
+          if Grid.check_win w then (
+            print_string "\nGood Job!\n";
+            on_game_end gr true;
+            Grid.reveal_all_mines w;
+          ) else
+          repl w)
         else (
           print_string "\nGame Over\n";
           on_game_end gr false;

@@ -93,6 +93,9 @@ val smile : grid
 val pokeball : grid
 (** A grid of a pokeball*)
 
+val charmander : grid
+(** A grid of a charmander*)
+
 val unrevealed : string
 (** Representation of unrevealed tiles *)
 
@@ -112,3 +115,6 @@ val check_mines : grid -> (int * int) list -> int
 val add_coord_numbers_to_grid : grid -> string
 (** Adds the column coordinates to the string rep of the grid. Call this After
     the end of the print_coord function *)
+
+val reset_grid : grid -> grid
+(** [reset_grid gr] returns gr with flagged and opened mines reset*)
