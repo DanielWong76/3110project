@@ -63,10 +63,15 @@ let determine_num_test (description : string) (grid : grid) (coords : int * int)
     (determine_num grid coords)
     ~printer:string_of_int
 
-let reveal_tile_error (description : string) (coords : int * int) (grid : grid)
-    =
+let reveal_tile_error_game_over (description : string) (coords : int * int)
+    (grid : grid) =
   description >:: fun _ ->
   assert_raises Game_Over (fun () -> reveal_tile coords grid)
+
+let reveal_tile_error_already_revealed (description : string)
+    (coords : int * int) (grid : grid) =
+  description >:: fun _ ->
+  assert_raises Already_Revealed (fun () -> reveal_tile coords grid)
 
 let grid_tests =
   [
@@ -119,7 +124,9 @@ let grid_tests =
     determine_num_test "determine num of empty" empty (0, 0) 0;
     determine_num_test "determine num when no mines" (new_grid 10 10 0) (0, 0) 0;
     determine_num_test "determine num when 1 mine" (new_grid 1 1 1) (0, 0) 1;
-    reveal_tile_error "reveal_tile lose" (1, 1) (new_grid 10 10 100);
+    reveal_tile_error_game_over "reveal_tile lose" (1, 1) (new_grid 10 10 100);
+    reveal_tile_error_already_revealed "reveal_tile already revealed" (5, 5)
+      (new_grid 10 10 0 |> reveal_tile (5, 5));
   ]
 
 let get_score_of_test_error (description : string) (name : string)

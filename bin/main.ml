@@ -50,8 +50,12 @@ let initialize difficulty =
   | "hard" -> new_grid 20 20 99
   | _ -> new_grid 0 0 0
 
+let initialize_custom size =
+  match size with
+  | x, y, b -> new_grid x y b
+
 let rec choose () : string =
-  print_endline "Please choose a difficulty: Easy, Medium, Hard\n";
+  print_endline "\nPlease choose a difficulty: Easy, Medium, Hard";
   print_string "> ";
   match String.lowercase_ascii (read_line ()) with
   | "easy" -> "Easy"
@@ -60,6 +64,37 @@ let rec choose () : string =
   | _ ->
       print_string "Not an Option\n";
       choose ()
+
+let rec custom () =
+  print_endline "\nChoose a number of rows and columns (1-40)";
+  print_string "> ";
+  let x = try read_int () with Failure _ -> -1 in
+  if x < 1 || x > 40 then (
+    print_string "Not a valid amount\n";
+    custom ())
+  else (
+    print_endline "\nChoose a number of bombs (minimum 1)";
+    print_string "> ";
+    let b = try read_int () with Failure _ -> -1 in
+    if b < 1 || b > (x * x) - 1 then (
+      print_string "Not a valid amount\n";
+      custom ())
+    else (x, x, b))
+
+let make_the_grid yes =
+  match yes with
+  | "preset" -> initialize (choose ())
+  | _ -> initialize_custom (custom ())
+
+let rec custom_difficulty () =
+  print_endline "\nCustom difficulty or choose a preset one?";
+  print_string "> ";
+  match String.lowercase_ascii (read_line ()) with
+  | "preset" -> "preset"
+  | "custom" -> "custom"
+  | _ ->
+      print_string "Not an Option\n";
+      custom_difficulty ()
 
 let open_tile (i, j) gr =
   try reveal_tile (i, j) gr with
@@ -82,6 +117,9 @@ let open_tile (i, j) gr =
         \            /   \\\n\
          ___________/_ __ \\_____________";
       Grid.empty
+  | Win _ ->
+      print_string "\nYOU WIN!\n ٩(๑･ิᴗ･ิ)۶٩(･ิᴗ･ิ๑)۶\n";
+      Grid.empty
 
 let flagged_tile (i, j) gr =
   try flag_tile (i, j) gr with
@@ -103,11 +141,34 @@ let rec choose_action () : string =
       print_string "Not an action\n";
       choose_action ()
 
+let rec view_leaderboard () =
+  print_endline "\nWould you like to view the leaderboard before you start?";
+  print_string "> ";
+  match String.lowercase_ascii (read_line ()) with
+  | "yes" ->
+      print_string
+        ("\nLEADERBOARD\n"
+       ^ "-------------------------------------------------------"
+        ^ Leaderboard.return_top_n 10 !leaderboard
+        ^ "\n")
+  | "y" ->
+      print_string
+        ("\nLEADERBOARD\n"
+       ^ "-------------------------------------------------------"
+        ^ Leaderboard.return_top_n 10 !leaderboard
+        ^ "\n")
+  | "no" -> ()
+  | "n" -> ()
+  | _ ->
+      print_string "Please type yes or no";
+      view_leaderboard ()
+
 let rec get_string () =
   let name = read_line () in
   match name with
   | _ -> (
       print_string "Are you sure? (Y/N)\n";
+      print_string "> ";
       match String.lowercase_ascii (read_line ()) with
       | "y" -> name
       | _ -> get_string ())
@@ -127,6 +188,7 @@ let calculate_score grid win =
 let rec on_game_end grid victory =
   print_string ("Score: " ^ string_of_int (calculate_score grid victory) ^ "\n");
   print_string "Would you like to save your score? (Y/N)\n";
+  print_string "> ";
   match String.lowercase_ascii (read_line ()) with
   | "n" -> ()
   | "y" ->
@@ -148,10 +210,13 @@ let rec on_game_end grid victory =
   | _ -> on_game_end grid victory
 
 let rec on_death () =
-  print_string "Try again? (Y/N)\n";
+  print_string "Try again?\n";
+  print_string "> ";
   match String.lowercase_ascii (read_line ()) with
+  | "yes" -> main ()
   | "y" -> main ()
   | "n" -> print_string "GGs \n"
+  | "no" -> print_string "GGs \n"
   | _ ->
       print_string "Sorry, I didn't quite catch that...\n";
       on_death ()
@@ -205,6 +270,7 @@ and pictionary () =
   let rec smile () =
     repl Grid.smile "\nPrompt: Be Happy!";
     print_string "\nDo you want to play that level again? [Y/N]\n";
+    print_string "> ";
     match String.lowercase_ascii (read_line ()) with
     | "n" -> Grid.reveal_all_mines Grid.smile
     | "y" -> smile ()
@@ -213,6 +279,7 @@ and pictionary () =
   smile ();
   let rec continue gr s =
     print_string "\nDo you want to continue? [Y/N]\n";
+    print_string "> ";
     match String.lowercase_ascii (read_line ()) with
     | "n" -> ()
     | "y" -> repl gr s
@@ -235,6 +302,7 @@ and main () =
     if action = "\nSaving..." then
       let file_name =
         print_string "Save name? (leave blank for default)\n";
+        print_string "> ";
         get_string ()
       in
       export_game gr !leaderboard file_name
@@ -268,23 +336,29 @@ and main () =
   in
   let rec game_mode () =
     print_string "\nPlease Choose a GameMode: Classic, Pictionary\n";
+    print_string "> ";
     let i = read_line () in
     match String.lowercase_ascii i with
-    | "classic" -> repl (initialize (choose ()))
+    | "classic" ->
+        let _ = view_leaderboard () in
+        repl (make_the_grid (custom_difficulty ()))
+    | "p" -> pictionary ()
     | "pictionary" -> pictionary ()
     | _ ->
-        print_string "\nNot a Game Mode\n";
+        print_string "\nNot a valid Game Mode\n";
         game_mode ()
   in
   let rec resume_or_save () =
     print_string
       "\nWould you like to start a new game or resume your old one?\n";
     print_string "\nChoose: New, Resume\n";
+    print_string "> ";
     let i = read_line () in
     match String.lowercase_ascii i with
     | "resume" ->
         print_string
           "\nPlease insert save name to load or leave blank for default.\n";
+        print_string "> ";
         let i = read_line () in
         if String.lowercase_ascii i = "" then
           repl (import_game "minesweeper.txt")
