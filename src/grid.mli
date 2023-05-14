@@ -68,6 +68,10 @@ val reveal_all_mines : grid -> unit
 val get_opened_tiles : grid -> int
 (** [get_opened_tiles g] returns the number of opened tiles in [g] *)
 
+val get_opened_tiles_list : grid -> (int * int) list
+(** [get_opened_tiles_list g] returns the list of coordinates of tiles that 
+    have been opened in g*)
+
 val add_time : grid -> float -> grid
 (** [add_time g t] returns a grid with the time of [t] to [g.time_taken] *)
 

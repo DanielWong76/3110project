@@ -73,6 +73,15 @@ let reveal_tile_error_already_revealed (description : string)
   description >:: fun _ ->
   assert_raises Already_Revealed (fun () -> reveal_tile coords grid)
 
+let reset_grid_test (description : string) (grid : grid) =
+  description >:: fun _ ->
+    assert_equal 0 (get_opened_tiles (reset_grid grid)) 
+
+let get_opened_tiles_list_test (description : string) (grid : grid)
+    (expected_output : (int * int) list) =
+    description >:: fun _ ->
+      assert_equal expected_output (get_opened_tiles_list grid)
+
 let grid_tests =
   [
     get_dimensions_test "get_dimensions test for empty" empty (0, 0);
@@ -127,6 +136,11 @@ let grid_tests =
     reveal_tile_error_game_over "reveal_tile lose" (1, 1) (new_grid 10 10 100);
     reveal_tile_error_already_revealed "reveal_tile already revealed" (5, 5)
       (new_grid 10 10 0 |> reveal_tile (5, 5));
+    reset_grid_test "reset grid empty" empty;
+    reset_grid_test "reset grid non-empty" (reveal_tile (1,1) (new_grid 10 10 0));
+    get_opened_tiles_list_test "get opened tiles list empty" empty [];
+    get_opened_tiles_list_test "get opened tiles list reset" (reset_grid (reveal_tile (1,1) 
+    (new_grid 10 10 0))) [];
   ]
 
 let get_score_of_test_error (description : string) (name : string)

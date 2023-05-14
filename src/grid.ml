@@ -638,6 +638,8 @@ let reset_grid gr = {mines=gr.mines;
                     time_taken=0.; 
                     time_created=Unix.time ();}
 
+let get_opened_tiles_list gr = gr.opened
+
 let import_grid ic =
   let new_grid = empty in
   parse_keywords ic new_grid
